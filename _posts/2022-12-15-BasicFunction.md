@@ -21,7 +21,7 @@ public class BasicFunction {
 	static void printSum(int sum) {
 		System.out.println(sum);
 	}
-//	void 들어온 값 a를 아무것도 하지않고 소비해버림 return을 쓸 수 없죠.
+//	void 들어온 값 a를 아무것도 하지않고 소비해버림 return을 쓸 수 없다.
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
