@@ -5,13 +5,17 @@ tags: java
 
 ```java
 
-package ex1.func;
+	package ex1.func;
 
 public class BasicFunction {
+	
+//	함수이름은 기능 > 순서로 짓는다 로또번호생성(x) > 생성로또번호 genLotto()
+//	카멜표기, 낙타표기
 
 	static int f1(int x) {
 		return 3 + x * 23;
 	}
+
 //	f1 앞 int의 의미는 반환값의 형식이 int라는 의미
 
 	static int add(int a, int b) {
