@@ -5,12 +5,13 @@ tags: java
 
 ```java
 
-	package ex1.func;
+package ex1.func;
 
 public class BasicFunction {
 	
 //	함수이름은 기능 > 순서로 짓는다 로또번호생성(x) > 생성로또번호 genLotto()
-//	카멜표기, 낙타표기
+//	카멜표기법(낙타표기법) 첫 글자를 제외한 각 합성어의 첫 글자만 대문자로 표기 ex)변수이름 camelCase
+// 	파스칼표기법 카멜표기법과 같지만 첫 글자도 대문자로 표기 ex)변수이름 CamelCase
 
 	static int f1(int x) {
 		return 3 + x * 23;
