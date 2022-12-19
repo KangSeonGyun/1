@@ -3,6 +3,11 @@ title: ArrayTest_v2
 tags: java
 ---
 
+// 이전 버전 code
+Link: [ArrayTest][id]
+
+[id]: https://ksg0000.github.io/2022/12/13/ArrayTest.html
+
 ```java
 
 package ex1.func;
