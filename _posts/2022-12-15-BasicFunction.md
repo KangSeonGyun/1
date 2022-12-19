@@ -35,7 +35,7 @@ public class BasicFunction {
 		System.out.println(result);
 
 		result = f1(4) - 23 + 345 - 23 + add(5, 9);
-//		f1() 빨간 물결밑줄이 뜨면 정의가 되어있지 않다는
+//		f1() 빨간 물결밑줄이 뜨면 정의가 되어있지 않다는 뜻
 
 		System.out.println(result);
 
