@@ -25,40 +25,38 @@ public class encapsulation {
 //		자동차는 타입, 형식명 / 이름은 참조
 //		자바에서 객체를 만들면 이름에 상관없이 hcode가 생성된다
 		
-//		객체지향은 우리가 머리속에 있는걸 그대로 표현하자
+//		객체지향은 우리가 머리속에 있는걸 그대로 실현하는 것
 		
 //		성적 객체를 준비한다.
 //		성적 뉴렉성적 = new 성적();
 		Exam exam1 = new Exam();
+//		Exam exam1 = new Exam 여기 까지가 객체 생성 new Exam + ()
+//		() 생성을 통해서만 호출할 수 있는 함수(생성자) 초기화 기능을 갖고 있다.
+		
+//		exam1.kor = 30;
+//		exam1.eng = 30;
+//		exam1.math = 30;
+//		private으로 인해 안된다.
+		
+		
+//		exam1.init();
+		
 		
 //		성적을 입력 받는다.
 //		뉴렉성적.입력();
-		inputExam(exam1);
+		Exam.inputExam(exam1);
 		exam1.input(); // 실 세계의 표현방식으로 프로그래밍
 		
 //		Exam.print(exam); 이렇게 작성하면 안됨
 		
 //		성적을 출력한다.
 //		뉴렉성적.출력();
-		printExam(exam1); // 객체지향 스럽지 않은 함수
-		exam1.print(); // 객체지향스러운 함수
+		Exam.printExam(exam1); // 객체지향스럽지 않은 함수
+		exam1.print(9); // 객체지향스러운 함수, 새로운 함수 정의 방법
 //		객체 O 실체 O 인스턴스 O 통해 호출되는 함수들은 exam1을 넘겨받는다. 위와 같은 의미의 새로운 표기법
-		
 	}
 
-	private static void printExam(Exam exam1) {
-//		인스턴스 함수가 아니라는 의미로 static을 붙인다. this를 사용할 수 없다
-		int kor = exam1.kor;
-		
-		System.out.printf("kor:%d\n", kor);
-		System.out.printf("eng:%d\n", exam1.eng);
-		System.out.printf("math:%d\n", exam1.math);
-		
-	}
 
-	private static void inputExam(Exam exam1) {
-		
-	}
 
 }
 
