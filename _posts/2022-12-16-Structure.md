@@ -18,7 +18,7 @@ public class Structure {
 
 //	Exam exam 선언(이름 붙이기) exam 객체 만듦
 
-//	exam1 = new Exam() 참조
+//	exam = new Exam() 참조
 
 //	class 사용하는 이유 2가지 - 함수를 묶기위해 사용(구조화), 캡슐화 ?
 
