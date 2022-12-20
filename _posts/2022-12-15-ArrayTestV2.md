@@ -1,5 +1,5 @@
 ---
-title: ArrayTest_v2
+title: ArrayTestV2
 tags: java
 ---
 
@@ -15,7 +15,7 @@ package ex1.func;
 import java.io.PrintStream;
 import java.util.Random;
 
-public class ArrayTest_v2 {
+public class ArrayTestV2 {
 
 //	int[] nums = new int[] {20,5,7,98,45,7,45,62,12,47};
 	static int[] nums = { 20, 5, 7, 98, 45, 7, 45, 62, 12, 47 }; // 같은 의미 최신버전
