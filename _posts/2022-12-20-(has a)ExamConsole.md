@@ -5,7 +5,7 @@ tags: java
 // 참고
 Link: [has a inheritance][id]
 
-[id]: https://ksg0000.github.io/2022/12/20/has a inheritance.html
+[id]: https://ksg0000.github.io/2022/12/20/has-a-inheritance.html
 
 
 ```java
