@@ -4,11 +4,11 @@ tags: java
 ---
 참고 Link: [(is a)ExamConsole][id]
 
-[id]: https://ksg0000.github.io/2022/12/20/(has-a)ExamConsole.html
+[id]: https://ksg0000.github.io/2022/12/21/(is-a)ExamConsole.html
 
 참고 Link: [(is a)Exam][id]
 
-[id]: https://ksg0000.github.io/2022/12/20/(has-a)Exam.html
+[id]: https://ksg0000.github.io/2022/12/21/(is-a)Exam.html
 
 
 ```java
