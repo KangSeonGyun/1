@@ -7,7 +7,6 @@ Link: [has a inheritance][id]
 
 [id]: https://ksg0000.github.io/2022/12/20/has-a-inheritance.html
 
-
 ```java
 
 package ex1.has_a;
