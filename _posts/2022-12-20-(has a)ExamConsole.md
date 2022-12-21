@@ -1,11 +1,11 @@
 ---
-title: ExamConsole
+title: (has a)ExamConsole
 tags: java
 ---
 // 참고
-Link: [inheritance][id]
+Link: [has a inheritance][id]
 
-[id]: https://ksg0000.github.io/2022/12/20/inheritance.html
+[id]: https://ksg0000.github.io/2022/12/20/has a inheritance.html
 
 
 ```java
