@@ -1,16 +1,20 @@
 ---
-title: encapsulation2
+title: Encapsulation2
 tags: java
 ---
 
-encapsulation2
+code Link: [Encapsulation][id]
+
+[id]: https://ksg0000.github.io/2022/12/19/Encapsulation.html
+
+Encapsulation2
 -------------
 
 ```java
 
 package ex1;
 
-public class encapsulation {
+public class Encapsulation {
 
 	public static void main(String[] args) {
 
