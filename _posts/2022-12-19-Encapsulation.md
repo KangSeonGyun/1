@@ -27,7 +27,7 @@ public class Encapsulation {
 
 //		성적 객체를 준비한다.
 		Exam exam1 = new Exam();
-//		Exam exam1 = new Exam 여기 까지가 객체 생성 / ()constructor로 구분할 수 있다
+//		Exam exam1 = new Exam 여기 까지가 (객체 실체 인스턴스) 생성 / ()constructor로 구분할 수 있다
 //		() constructor 생성자란? 앞에 갓 생성된 객체가 있어야 한다 / 초기화 기능을 갖고 있다 / Exam.java 참고
 //		초기화란 객체가 생성 되자 마자 무조건 제일 먼저 실행되어야 하고 생성될 때 한번만 실행 되어야 한다.
 
@@ -47,7 +47,7 @@ public class Encapsulation {
 //		캡슐화를 깨지않기위해 구조화된 객체(Exam)와 구조화된 객체(Exam)를 사용하는 함수(inputExam)를 하나의 영역(Exam.java)에 함께 둔다
 //		exam1을 매개변수로 받는다. / exam1을 인스턴스로 전달한다
 //		다른언어에선 함수 Java에선 static 매서드(고전적인 함수)라고 한다 / 모든 값은 파라미터를 통해 넘겨 받는다
-//		캡슐화를 깨트리면 encapsulation.java파일 내에 함수 작성도 가능하다
+//		캡슐화를 깨트리면 encapsulation.java파일 내에 (static)함수 작성도 가능하다
 
 		exam1.input();
 //		실 세계의 표현방식으로 프로그래밍 / 위와 같은 의미의 새로운 표기법 / 더 편하다고 느껴진다 / exam1야.입력해();
@@ -95,6 +95,11 @@ public class Exam {
 	public Exam() {
 //		생성자()는 이름이 없다. Exam은 이름이 아니고 Exam형식의 객체만 호출할 수 있는 의미 / 한정사 / 함수가 아니다
 //		Exam형식의 객체가 만들어 져야만 호출 할 수 있다
+//		위쪽 private int kor;에 값이 들어가는게 아니라 생성된 객체 kor eng math(메모리 heap)에 들어간다
+//		인스턴스 변수는 인스턴스가 생성될 때마다 생성되므로 인스턴스마다 각기 다른 값을 가지지만
+//		정적 변수는 모든 인스턴스가 하나의 저장공간을 공유하기에 항상 같은 값을 가진다
+
+//		생성자는 생성되자마자 초기화 되어야 한다 / 생성자는 한번만 초기화 되어야 한다
 		kor = 30;
 		eng = 30;
 		math = 30;
