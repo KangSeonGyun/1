@@ -10,8 +10,15 @@ package ex1;
 public class Injection {
 
 	public static void main(String[] args) {
+
+
+
+
 //		DI(Dependency Injection) 의존성 주입
 //		의존성 주입이 아니라 부품 결합으로 이해하자
+
+
+
 
 //		DI에서 Injection의 두 가지 방식
 //		1. Setter Injection

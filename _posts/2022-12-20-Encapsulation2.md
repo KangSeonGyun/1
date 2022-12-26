@@ -18,16 +18,14 @@ public class Encapsulation {
 
 	public static void main(String[] args) {
 
+//		오버로드 생성자
 		Exam exam1 = new Exam(1,2,3);
 
 		exam1.reset();
 
-		Exam.inputExam(exam1);
-
 		exam1.input();
-
-		Exam.printExam(exam1);
-
+		
+//		오버로드 함수
 		exam1.print();
 		exam1.print('=');
 		exam1.print('=', 10);
@@ -53,13 +51,14 @@ public class Exam {
 	private int math;
 
 	public Exam() {
-
 //		kor = 0;
 //		kor을 0으로 초기화 하고 아래서 this(0, 0, 0);로 또 한번 초기화 할수 없기 때문에 안된다
 		this(0, 0, 0); // 기본값
 		
 		kor = 0;
 //		0으로 초기화되는게 아닌 값 0을 넣어주는 것이다
+
+//		오버로드 생성자만 있고 기본 생성자가 없으면 오버로드 형식으로만 객체를 생성할 수 있다
 	}
 
 //	오버로드 생성자
@@ -67,6 +66,7 @@ public class Exam {
 		this.kor = kor;
 		this.eng = eng;
 		this.math = math;
+//		지역변수에서 kor이 있는지 찾고 없으면 this에서 kor을 찾는다 / 전역변수 Exam에서 절대 찾지 않는다.
 //		kor = kor;로 작성하면 변역기가 지역변수 kor = 지역변수 kor인줄 안다
 //		this를 사용해 명확히 표기해줘야 한다 / this를 생략하지 못하는 경우도 있다
 	}
