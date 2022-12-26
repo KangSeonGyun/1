@@ -51,6 +51,7 @@ public class ExamConsole {
 
 	private Exam exam;
 	private Exam[] exams;
+//	캡슐(ExamConsole)이 다른 캡슐(Exam)을 이용하는 관계가 있다 / 이용하기 위해 부품으로 가지고 있으며 자기의 멤버로 같고있다 has a 상속
 	
 	
 //	private Exam exam = new Exam();
