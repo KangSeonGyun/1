@@ -47,7 +47,7 @@ import java.util.Scanner;
 
 public class ExamConsole {
 //	콘솔로 일체화된 데이터 관리 클래스는 콘솔 외에 다른 플랫폼에서 재사용이 어렵다
-//	Exam.class는 재사용에 용이하지만 ExamConsole.class는 input(), print()매서드 내 콘솔 사용으로 인해 재사용이 어렵다
+//	Exam.class는 재사용에 용이하지만 ExamConsole.class는 input(), print()매서드 내 콘솔 사용으로 인해 콘솔 외 플랫폼에 재사용이 어렵다
 
 	private Exam exam;
 	private Exam[] exams;
