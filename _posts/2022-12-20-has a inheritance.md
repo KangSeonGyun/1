@@ -89,8 +89,7 @@ public class ExamConsole {
 		} while (kor < 0 || 100 < kor);
 
 		exam.setKor(kor);
-//		Exam안 kor은 private로 인해 사용할 수 없다.
-// 		setter / this 생략 가능
+//		Exam안 kor은 private로 인해 사용할 수 없다 / setter 사용
 
 		int eng;
 		do {

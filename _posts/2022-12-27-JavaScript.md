@@ -26,8 +26,8 @@ Js 실습을 위한 Html
 <script>
 	//	컴파일러에서 오류를 찾을 수 없다 / 실행환경에 의한 오류 확인
 	//	내려쓰기 or ; 으로 코드의 끝을 표시한다
-	//	Wrapper 클래스가 기본형 int a;를 하면 int A = new int();로 만듦 / primitive type의 값을 담는 객체를 생성하는 것이다.
-	//	값 변수 형식이없다 / js는 모든걸 객체화한다
+	//	Wrapper 클래스가 기본형 int a;를 하면 int A = new int();로 만듦 / Wrapper객체 / primitive type의 값을 담는 객체를 생성하는 것이다.
+	//	primitive 값은 Wrapper의 메소드를 통해 가져온다 / 결국 js는 값 변수 형식이없으며 모든걸 객체화한다
 	//	Boxing - primitive type을 객체로 다른 메서드를 사용할 수 있습니다. String 기본형 변수를 자동으로 String 객체로 만듦
 	
 	var x // Type - undefined
@@ -157,7 +157,7 @@ Js 실습을 위한 Html
 	if (isNaN(z))
 		console.log("오류"); // 오류
 	
-	// for-in, for-of / for-of는 ES6에서 등장
+	// for-in, for-of / for-of는 ES6에서 등장 / 이부분 정리 필요
 	var ar = ["철수", "유리", "맹구", "짱구"];
 	
 	for(i in ar)
