@@ -22,27 +22,27 @@ public class inheritance {
 //		NewlecExam의 소스를 들여다 보지 않는 이상 틀로 만든 줄 모르고 NewlecExam이 만든걸로 이해한다 / .total(), .avg매서드도 NewlecExam만든걸로 이해한다
 
 
+//		Exam과 NewlecExam 참조형식 차이 / 참조형식 참조변수 = new(생성자, 연산자) 객체형식();
+		
 // 		Exam exam = new NewlecExam(); 가능하다
-//		NewlecExam객체는 Exam객체와 NewlecExam객체 2가지 객체가 있다 / Exam 형식으로 만들면 NewlecExam의 일부인 Exam만 참조하는 것 / 참조형식도 2가지다
+//		NewlecExam객체는 Exam객체와 NewlecExam객체 두 가지 객체, 참조형식을 가지고 있다 / Exam형식으로 참조하면 NewlecExam객체의 일부인 Exam객체만 참조하는 것
 		
 //		NewlecExam exam = new Exam(); 에러난다
-//		new Exam();
+//		Exam객체는 Exam객체 한 가지 객체만 가지고 있다
 
-		
-//		Exam과 NewlecExam 참조 차이
 		NewlecExam exam1 = new NewlecExam(1,1,1,1);
 		System.out.println(exam1.total()); // 4가 나온다
 //		하지만 Exam.java파일에 total()이 없고 NewlecExam.java파일에 오버라이드 total()만 있다면 실행 가능
-		System.out.println(exam1.avg());
+
+		System.out.println(exam1.avg()); // 1.0
 		
 		Exam exam2 = new NewlecExam(1,1,1,1);
 		System.out.println(exam2.total()); // 3이 나올 것 같지만 4가 나온다
 //		자바는 참조형식(Exam)의 함수보다 객체 형식(NewlecExam)의 함수 호출을 우선시 한다 
 //		하지만 Exam.java파일에 total()가 없고 NewlecExam.java파일에 오버라이드 total()만 있다면 실행 불가능 / Exam형식으로는 total()을 호출할 수 없기 때문
 //		참조형식(Exam)이 갖고 있는 매서드에 한해서 호출 가능하지만 갖고 있지 않다면 호출 자체가 불가능 / 오버라이드 함수가 있다면 오버라이드 함수가 실행 됨
-		System.out.println(exam2.avg());
-		
-//		부품으로 썻다면 exam. 찍으면 뭐가 나온다
+
+		System.out.println(exam2.avg()); // 1.0
 		
 	}
 

@@ -115,6 +115,7 @@ Js 실습을 위한 Html
 
 	var data = JSON.parse("[3,5,4,2]"); // JSON 데이터를 객체화
 	alert(data[2]); // 4
+	console.log(typeof data) // Object
 
 	JSON.stringify() // JSON 데이터 만들기
 
