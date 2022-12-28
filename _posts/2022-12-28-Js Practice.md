@@ -3,7 +3,7 @@ title: Js Practice
 tags: javaScript
 ---
 
-Js 실습을 위한 Html
+Js 실습을 위한 html
 -------------
 
 ```html

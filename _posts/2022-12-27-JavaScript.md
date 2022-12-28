@@ -10,7 +10,7 @@ ES6은 응용
 Java - int x = 3;
 JS   - var x = 3;
 
-Js 실습을 위한 Html
+Js 실습을 위한 html
 -------------
 
 ```html
