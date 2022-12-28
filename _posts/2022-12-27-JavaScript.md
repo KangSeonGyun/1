@@ -1,6 +1,6 @@
 ---
 title: JavaScript
-tags: javaScript
+tags: javascript
 ---
 
 ES5를 배우고 ES6

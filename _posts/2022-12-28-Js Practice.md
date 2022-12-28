@@ -1,6 +1,6 @@
 ---
 title: Js Practice
-tags: javaScript
+tags: javascript
 ---
 
 Js 실습을 위한 html
