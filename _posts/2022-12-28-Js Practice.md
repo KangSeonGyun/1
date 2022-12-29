@@ -141,6 +141,37 @@ Js 실습을 위한 html
         var c = 3
         console.log(typeof c) // number
         
+        // -----------------------------
+        
+        var date1 = new Date();
+
+        var h = date1.getHours;
+
+        if (h < 12)
+            console.log("오전");
+        else
+            console.log("오후");
+
+        // -----------------------------
+
+        var num = Number(prompt("숫자를", "입력해라"));
+
+        // Number()가 빠지면 String형으로 넘어오기 때문에 명시적 형변환을 해줬다
+
+        if (num % 2 == 0)
+            console.log("짝수");
+        else if (num % 2 == 1)
+            console.log("홀수");
+
+        // -----------------------------
+
+        var arr = [];
+
+        for (var i = 0; i < 30; i++)
+            arr[i] = i + 1;
+
+        console.log(arr);
+        
     </script>
 </head>
 
