@@ -17,6 +17,7 @@ public class Structure {
 //	Exam 데이터 구조 정의
 
 //	Exam exam 선언(이름 붙이기) exam 객체 만듦
+//	객체란? 어떤 프로그래밍 언어가 내용(값 등등..)을 사용할 수 있게 해주는 메모리상에 대상이 되는 것
 
 //	exam = new Exam() 참조
 
