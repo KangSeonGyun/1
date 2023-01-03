@@ -21,7 +21,8 @@ window.Lazyload.js([SOURCES.jquery, PAHTS.search_js], function() {
       key = keys[i];
       for (j = 0; j < searchData[key].length; j++) {
         cur = searchData[key][j], _title = cur.title;
-        if ((result[key] === undefined || result[key] && result[key].length < 20 )
+        if ((result[key] === undefined || result[key] && result[key].length < 100 )
+        // 숫자 100으로 수정
           && _title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
           if (result[key] === undefined) {
             result[key] = [];
