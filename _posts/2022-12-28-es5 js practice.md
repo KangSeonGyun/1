@@ -1,5 +1,5 @@
 ---
-title: Js Practice
+title: ES5 Js Practice
 tags: javascript
 ---
 
