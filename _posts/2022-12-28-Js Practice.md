@@ -3,21 +3,7 @@ title: Js Practice
 tags: javascript
 ---
 
-Js 실습을 위한 html
--------------
-
-```html
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <script>
+```js
 
         var x = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for (i in x)
@@ -171,14 +157,14 @@ Js 실습을 위한 html
             arr[i] = i + 1;
 
         console.log(arr);
-        
-    </script>
-</head>
 
-<body>
+```
 
-</body>
+```javascript
+		var arr = [];
 
-</html>
+       for (var i = 0; i < 30; i++)
+            arr[i] = i + 1;
 
+       console.log(arr);
 ```
