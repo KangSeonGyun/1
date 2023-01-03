@@ -158,6 +158,7 @@ box1.test(); // Box {}
 
 var f1 = box1.test; // ()가 빠졋다
 f1(); // Window {}
+// f1은 인스턴스 매서드가 된다 / 호출자가 바꼈다
 // f1은 window.f1이다
 
 var obj = { kor: 2 }
@@ -172,6 +173,7 @@ obj.onload.call(n1); // {id: 1, title: 'hello'}
 obj.onload.apply(n1, ['hi', 'okay']); // {id: 1, title: 'hello'} hi okay
 // test function(x, y) 추가 및 console.log(x); console.log(y); 추가
 
+f1.test.bind(this);?
 // .bind(this); 함수를 호출한 뒤에 this를 바꿔줌?
 
 ```
