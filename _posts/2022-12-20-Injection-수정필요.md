@@ -14,12 +14,12 @@ public class Injection {
 // 의존관계란? / A가 B를 의존한다 > 의존대상 B가 변하면, 그것이 A에 영향을 미친다.
 // B의 기능이 추가 또는 변경되거나 형식이 바뀌면 그 영향이 A에 미친다.
 
-
 //		DI에서 Injection의 두 가지 방식
+
 //		1. Setter Injection
+
 //		A a = new A();
 //		B b = new B();
-
 //		a.setB(b);
 
 //		2. Construction Injection
