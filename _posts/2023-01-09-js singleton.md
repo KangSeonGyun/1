@@ -129,3 +129,7 @@ console.log(a === b); // true
 console.log(a); // Singleton2 {publicProp: 'single value', publicMethod: ƒ}
 
 ```
+
+참고 Link: [싱글톤(singleton) 패턴][id]
+
+[id]: https://webclub.tistory.com/150
