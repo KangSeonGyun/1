@@ -3,6 +3,10 @@ title: Js Singleton
 tags: javascript
 --- 
 
+Link: [Js Module][id]
+
+[id]: https://ksg0000.github.io/2023/01/09/js-module.html
+
 ```js
 
 // 싱글톤(singleton) 패턴 이해를 위한 Js 복습
@@ -127,6 +131,25 @@ var b = new Singleton2();
 console.log(a === b); // true
 
 console.log(a); // Singleton2 {publicProp: 'single value', publicMethod: ƒ}
+
+```
+
+module1.js
+-------------
+
+```js
+
+// 모듈에서 객체 내보내기를 이용한 싱글톤(singleton) 패턴을 구현하는 예제
+
+class Exam {
+    constructor() {
+        this.kor = 1;
+        this.eng = 2;
+        this.math = 3;
+    }
+}
+
+export let exam = new Exam();
 
 ```
 
