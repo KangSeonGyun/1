@@ -132,12 +132,7 @@ console.log(a === b); // true
 
 console.log(a); // Singleton2 {publicProp: 'single value', publicMethod: ƒ}
 
-```
-
-module1.js
--------------
-
-```js
+// -------------------------------------------------------------------------------------
 
 // 모듈에서 객체 내보내기를 이용한 싱글톤(singleton) 패턴을 구현하는 예제
 
