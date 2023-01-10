@@ -148,6 +148,6 @@ export let exam = new Exam();
 
 ```
 
-참고 Link: [싱글톤(singleton) 패턴][id]
+참고 Link: [싱글톤(singleton) 패턴][id2]
 
-[id]: https://webclub.tistory.com/150
+[id2]: https://webclub.tistory.com/150
