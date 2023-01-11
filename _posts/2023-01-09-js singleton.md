@@ -136,7 +136,6 @@ console.log(a); // Singleton2 {publicProp: 'single value', publicMethod: ƒ}
 
 // 모듈에서 객체 내보내기를 이용한 싱글톤(singleton) 패턴을 구현하는 예제
 
-// 1
 class Exam {
     constructor() {
         this.kor = 1;
@@ -145,6 +144,7 @@ class Exam {
     }
 }
 
+// 1
 export let exam = new Exam();
 
 // 2
