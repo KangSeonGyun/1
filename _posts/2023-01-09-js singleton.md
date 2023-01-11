@@ -151,7 +151,7 @@ export let exam = new Exam();
 export default new Exam();
 
 // 틀린 예제
-export default Exam
+export default Exam;
 // 받는 쪽에서 new Exam()으로 생성하는 순간 서로다른 객체가 만들어 진다
 
 ```
