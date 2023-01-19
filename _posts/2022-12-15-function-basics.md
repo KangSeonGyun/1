@@ -1,5 +1,5 @@
 ---
-title: BasicFunction
+title: Function Basics
 tags: java
 ---
 
