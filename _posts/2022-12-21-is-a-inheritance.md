@@ -90,6 +90,8 @@ public class NewlecExam extends Exam {
 //	부모에 있던 total 위에 자식 total을 덮어 쓴다 올라 탄다 / 부모에 있는 total을 못보게 함
 //	total이 호출되면 먼저 NewlecExam(this)에서 total()이 있는지 확인 하고 없다면 Exam(super)에서 total()을 찾는다
 
+	@Override
+//	@Override가 있다면 해당 매서드는 무조건 @Override매서드 이기 때문에 오탈자를 잡아준다 / total2()면 새로운 매서드가 생성되는 것이 아닌 빨간줄이 그어진다
 	public int total() {
 		return super.total() + com;
 //		그냥 kor + eng + math는 사용이 불가능하다 NewlecExam에 정의가 되어있지 않기 때문
