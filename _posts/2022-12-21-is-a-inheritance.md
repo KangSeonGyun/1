@@ -24,7 +24,7 @@ public class inheritance {
 
 //		Exam과 NewlecExam 참조형식 차이 / 참조형식 참조변수 = new(생성자, 연산자) 객체형식();
 		
-// 		Exam exam = new NewlecExam(); 가능하다
+// 	Exam exam = new NewlecExam(); 가능하다
 //		NewlecExam객체는 Exam객체와 NewlecExam객체 두 가지 객체, 참조형식을 가지고 있다 / Exam형식으로 참조하면 NewlecExam객체의 일부인 Exam객체만 참조하는 것
 		
 //		NewlecExam exam = new Exam(); 에러난다
