@@ -390,9 +390,9 @@ public class NewlecExamConsole extends ExamConsole {
 	@Override
 	protected void onInput(Exam exam) {
 		NewlecExam newlecExam = (NewlecExam) exam;
+//		Exam exam = new NewlecExam();
 //		exam이 참조하고 있는 객체는 makeExam()으로 만들어진 NewlecExam이다
-//		하지만 참조 되는 자료형식이 Exam이기 때문에 형변환이 필요하다 / Exam exam = new NewlecExam();
-//		Exam범위 내에서만  메소드를 볼 수 있다
+//		참조 되는 자료형식이 Exam이기 때문에 Exam범위 내에서만 메소드를 볼 수 있다 / 형변환이 필요하다
 
 		Scanner scan = new Scanner(System.in);
 		int com;
