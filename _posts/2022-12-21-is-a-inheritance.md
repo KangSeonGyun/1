@@ -3,7 +3,7 @@ title: is a inheritance
 tags: java
 ---
 
-is a inheritance
+inheritance.java
 -------------
 
 ```java
@@ -50,7 +50,7 @@ public class inheritance {
 
 ```
 
-NewlecExam
+NewlecExam.java
 -------------
 
 ```java
@@ -108,7 +108,7 @@ public class NewlecExam extends Exam {
 
 ```
 
-ExamConsole
+ExamConsole.java
 -------------
 
 ```java
@@ -200,7 +200,7 @@ public class ExamConsole {
 
 ```
 
-Exam
+Exam.java
 -------------
 
 ```java

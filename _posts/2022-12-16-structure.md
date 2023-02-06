@@ -3,6 +3,36 @@ title: Structure
 tags: java
 ---
 
+MainMemory
+-------------
+
+```java
+
+package ex1;
+
+public class MainMemory {
+
+	public static void main(String[] args) {
+
+//		메인메모리 RAM은 Data, Text로 구분
+//		Data는 Heap, Stack / 선으로 구분되어 있는게 아니라 식당의 입석과 예약석과 비슷하다 예약석이 많아지면 입석을 줄이고 입석이 많아지면 예약석을 줄임
+//		Text는 Instruction이 움직이며 한줄한줄 실행
+		int total = 0;
+		int kor = 2;
+		int[] kors = new int[3];
+
+//		메인메모리 Data - Stack 미리 선언되어야 할 예약어는 args total kor kors 4개
+//		변수명, 배열의 이름은 Stack에 있다 / 배열은 Heap에 있다 배열의 이름이 사라지면 Heap에 남아있는 값은 가바지 값이 된다
+	
+	}
+
+}
+
+```
+
+Structure
+-------------
+
 ```java
 
 package ex1;
@@ -24,11 +54,9 @@ public class Structure {
 //	class 사용하는 이유 2가지 - 함수를 묶기위해 사용(구조화), 캡슐화 ?
 
 	public static void main(String[] args) {
-//	new Exam()는 Heap에 만들어짐 변수선언 안됨 / .kor, .eng, .math은 Heap안에 있는 Exam()안에 있다
-//	Exam1은 Stack에 만들어짐
-//		상태 제어
-
-		Exam exam = new Exam(); // 선언과 참조 exam1[kor][eng][math]
+		Exam exam = new Exam(); // 선언과 참조 exam[kor][eng][math]
+//		exam은 Stack에 만들어짐
+//		new Exam()는 Heap에 만들어짐 변수선언 안됨 / .kor, .eng, .math은 Heap안에 있는 Exam()안에 있다
 
 		exam.kor = 10;
 		exam.eng = 20;
@@ -37,7 +65,7 @@ public class Structure {
 		printExam(exam);
 
 		Exam[] exams = new Exam[3];
-//		exams 이름의 배열이 만들어짐. 이름(exams)은 Stack에 배열은 Heap에 만들어짐
+//		exams 이름의 배열이 만들어짐 / 이름(exams)은 Stack에 배열은 Heap에 만들어짐
 //		new는 실행될 때 동적에 할당 Heap
 //		Exam이라는 참조만 3개 준비 kor eng math 없다
 //		Exam 객체가 아닌 배열이 만들어짐 or Exam형식의 변수가 3개만들어짐 Heap에 만들어 진다
@@ -46,10 +74,11 @@ public class Structure {
 
 //		exams(Stack) > exams[[0][1][2]](Heap) / [0][1][2]생성 Heap
 
-//		exams[0].kor = 30; // Error - NullPointerException .kor이 뭔지 알 수 없다
+//		exams[0].kor = 30; // Error - NullPointerException / .kor이 뭔지 알 수 없다
 
 		exams[0] = new Exam(); // 객체 만들어줌
-//		exams(Stack) > exams[0](Heap) > exams[[[kor][eng][math]][1][2]](Heap) / [[kor][eng][math]]생성 Heap
+//		[[kor][eng][math]]생성 (Heap)
+//		exams(Stack) > exams[0](Heap) > exams[[[kor][eng][math]][1][2]](Heap)
 
 		exams[0].kor = 10;
 		exams[0].eng = 10;
