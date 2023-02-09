@@ -30,14 +30,6 @@ public class Program {
 
 		Lib.printIntro(banner);
 		
-		Banner[] banners = new Banner[2];
-
-		banners[0] = new ICTBanner();
-		banners[1] = new BB();
-		
-		for(int i= 0; i<2; i++)
-			Lib.printIntro(banners[i]);
-
 //		ICTBanner객체를 함수의 인자로 넘겨줬다  / 어떤 것을 print할지는 ICTBanner가 결정
 
 //		----------------------------------------------------------------------------------------------
@@ -96,106 +88,10 @@ public class Program {
 //		함수가 2개 이상이라면 람다가 어떤함수를 정의했는지 알 수 없다
 		Lib.printIntro(() -> {
 //			함수로 구현했기 때문에 {}를 써줬다
-			System.out.println("  Lamda 익명 교육센터  ");
+			System.out.println("  lambda 익명 교육센터  ");
 		});
-//		----------------------------------------------------------------------------------------------
-
-		List list = new ArrayList();
-		list.add("3");
-		list.add("2");
-		list.add("6");
-		list.sort(null);
-
-		System.out.println(list); // [2, 3, 6]
-
-		list.add("15");
-		list.sort(null);
-//		문자는 첫 번째 글자로 비교되기 때문에 잘못된 결과가 나온다
-//		기준열을 제공하지 않고 정렬
-		System.out.println(list); // [15, 2, 3, 6]
-
-//		----------------------------------------------------------------------------------------------
-
-		List list2 = new ArrayList();
-		list2.add(3);
-		list2.add(2);
-		list2.add(6);
-		list2.sort(null);
-
-		System.out.println(list2); // [2, 3, 6]
-
-		list2.add(15);
-		list2.sort(null);
-//		숫자는 잘 정렬된다
-		System.out.println(list2); // [2, 3, 6, 15]
-
-//		----------------------------------------------------------------------------------------------
-
-		List list3 = new ArrayList();
-		list3.add(new Exam(1, 3, 2));
-		list3.add(new Exam(10, 20, 30));
-		list3.add(new Exam(60, 50, 40));
-		list3.add(new Exam(3, 4, 5));
-
-//		list3.sort(new Comparator<T>() {
-//			@Override
-//			public int compare(T o1, T o2) {
-//				// TODO Auto-generated method stub
-//				return 0;
-//			}
-//		});
-
-//		Comparator 람다식
-//		list3.sort(null);로 비교한다면 어떤걸 기준으로 정렬해야 할지 모른다
-		list3.sort((x, y) -> ((Exam) x).getKor() - ((Exam) y).getKor());
-//		Kor점수료 정렬한다
-//		양수, 0, 음수 3가지 경우의 수로 비교한다
-
-		System.out.println(list3); // [2, 3, 6]
+		
 	}
-}
-
-```
-
-Banner.java
--------------
-
-```java
-
-package com.newlecture.web.poly;
-
-public interface Banner {
-//	메소드 인터페이스(?)
-	
-//	interface - 부품의 분리를 생각할 때 부품을 구현하는 클래스가 만족해야할 최소한의 기능, 규칙, 규약을 정의하는 도구
-//	interface형식으로 자료형을 만들어 뒀다
-//	추상클래스 Banner가 아닌 약속으로써의 Banner가 필요하다
-//	추상클래스 였다면 Banner의 자식으로 ICTBanner가 있다
-//	추상화와 달리 집중화 목적이 아니다 / 코드 분리 목적
-//	interface는 Banner에 들어온 Class가 print()를 구현하고 있어야 한다는 약속이다 / Class가 아니다
-//	기능면의 인터페이스
-	
-//	interface는 두 가지다
-//	1. 부품으로 분리되는 형태
-//		여러개의 메소드를 갖고 있다
-//		하나의 부품이 갖고 있어야 할 모든 목록을 다 구현한다
-	
-//	2. 코드의 일부분만 분리
-//		메소드에서 일부분의 내용만 분리
-	
-//	추상 클래스와 인터페이스의 차이
-//	추상 클래스는 이미 구현된 추상 클래스와 추상 클래스를 상속받은 객체 중 골라서 사용한다
-	
-//	인터페이스는 틀만 정리된 interface로 서비스를 만들어 놓고 추후에 interface를 구현한 부품을 서비스에 끼워서 사용한다
-	
-	
-
-	void print();
-//	public private은 구현한 것에대한 정의(??)다
-//	따라서 안 들어간다 / 약속에 대한 명세를 쓰는 것이다
-
-//	int x;
-//	안 된다
 }
 
 ```
@@ -245,56 +141,6 @@ public class ICTBanner implements Banner {
 		System.out.println("   ICT 교육센터   ");
 	}
 
-}
-
-```
-
-Exam.java
--------------
-
-```java
-
-package com.newlecture.web.poly;
-
-public class Exam {
-	int kor;
-	int eng;
-	int math;
-
-	public Exam() {
-		this(0, 0, 0);
-	}
-
-	public Exam(int kor, int eng, int math) {
-		this.kor = kor;
-		this.eng = eng;
-		this.math = math;
-	}
-
-	public void setKor(int kor) {
-		this.kor = kor;
-	}
-
-	public void setEng(int eng) {
-		this.eng = eng;
-	}
-
-	public void setMath(int math) {
-		this.math = math;
-	}
-
-	public int getKor() {
-		return kor;
-	}
-
-	public int getEng() {
-		return eng;
-	}
-
-	public int getMath() {
-		return math;
-	}
-	
 }
 
 ```
