@@ -17,8 +17,6 @@ public class Program {
 //		하나의 프로그램을 여러 곳에서 쓸 때 달라져야할 부분이 있다
 //		코드의 일부분을 쉽게 바꿔낄수있는 방법이 필요하다
 
-		Lib lib = new Lib();
-
 		Banner banner = new ICTBanner();
 //		interface Banner를 구현한 모든 객체는 참조형으로 Banner를 참조할 수 있다
 //		ICTBanner는 interface 구현 목적이지 객체, 부품으로써의 의미는 크지 않다
@@ -31,8 +29,10 @@ public class Program {
 		banner.print();
 //		메소드 인터페이스, 일부 기능을 분리한 인터페이스
 
+		Lib lib = new Lib();
+
 		lib.printIntro(banner);
-//		interface를 사용한 서비스와 interface Banner를 구현한 ICTBanner를 결합했다
+//		Banner interface를 사용한 서비스 printIntro()와 interface Banner를 구현한 ICTBanner를 결합했다
 //		ICTBanner객체를 함수의 인자로 넘겨줬다 / 어떤 것을 print()할지는 ICTBanner가 결정
 
 //		----------------------------------------------------------------------------------------------
