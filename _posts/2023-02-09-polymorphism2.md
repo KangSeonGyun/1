@@ -31,16 +31,16 @@ public class Program {
 //		--------------------------------------------------------------------------------------
 
 		C c = new C();
-//		interface X를 구현한 모든 객체를 결합할 수 있는 결합형 / 결합력이 낮아 졌다
+//		interface X를 구현한 C를 결합할 수 있는 결합형
 		a.setX(c);
-//		부품 C와 결합했다
+//		부품 C와 결합했다 / 결합력이 낮아 졌다
 		a.print2();
 
 //		--------------------------------------------------------------------------------------
 
 //		소스코드 변경하지 않고 기존 객체를 새로운 객체로 바꿔 낄 수 있는 방법
 
-//		외부 설정파일의 대표적인 방법 2가지
+//		설정파일의 대표적인 방법 2가지
 //			1. xml 형태의 외부 설정파일
 //			2. Class에 컴파일 해도 남겨지는 주석 어노테이션
 
@@ -52,7 +52,6 @@ public class Program {
 		String className = scan.nextLine();
 		scan.close();
 		fis.close();
-		System.out.println(className); // com.newlecture.web.인터페이스.C
 
 		X x = new className(); // className cannot be resolved to a type / 에러
 //		X x = new className();은 X x = new "com.newlecture.web.인터페이스.C"();와 같다 / 문자열 앞에 new는 불가능 하다
@@ -62,7 +61,7 @@ public class Program {
 //		C.class.get... 으로 C 클래스가 갖고있는 속성, 메소드, 생성자, 어노테이션, 프로그램 구조 등등을 알아낼 수 있다
 
 		X x = (X) clazz.getDeclaredConstructor().newInstance();
-//		새로운 객체로 바꿔 낄 수있게 자료형을 interface형 X로 한다
+//		interface X를 구현한 모든 객체들을 바꿔 낄 수있게 참조형식을 interface형식 X로 한다
 //		Class로 새로운 Instance를 만들었다 / Instance를 만드는 2가지 방법 C.class.newInstance(); or new C(); 
 //		jdk버전이 1.8보다 낮다면 X x = (X) clazz.newInstance();
 		a.setX(x);
