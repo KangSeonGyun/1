@@ -5,7 +5,7 @@ tags: java
 
 Link: [Polymorphism][id]
 
-[id]: https://ksg0000.github.io/2023/02/08/Polymorphism.html
+[id]: https://ksg0000.github.io/2023/02/08/polymorphism.html
 
 Program.java
 -------------
