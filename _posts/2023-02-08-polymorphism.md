@@ -159,12 +159,36 @@ public interface Banner {
 //	--------------------------------------------------------------------------------------
 
 	void print();
-//	interface는 구현하는 것이 아닌 약속만 정의하는 것이다 / Banner 기능에 대한 목록 / 약속에 대한 명세를 쓰는 것이다
+//	인터페이스의 메서드 / interface는 구현하는 것이 아닌 약속만 정의하는 것이다 / Banner 기능에 대한 목록 / 약속에 대한 명세를 쓰는 것이다
 //	public(데이터 서비스) private(숨기기)는 데이터를 갖고 있거나 기능을 구현하고있는 캡슐에서만 의미가 있다
-//	interface Banner에 들어온 Class가 print()를 구현하고 있어야 한다는 약속이다
+//	interface Banner에 들어온 Class가 print()를 구현하고 있어야 한다는 약속이다 /  무조건 print() 구현해야 함
+//	interface method - 가이드만 줄테니 오버라이딩해라
 
+	default void print2() {
+		System.out.println("default 메소드");
+	}
+//	자바8 버전 이후부터는 디폴트 메서드(default method)를 사용할 수 있다
+//	interface method는 몸통(구현체)을 가질 수 없지만 default method를 사용하면 실제 구현된 형태의 메서드를 가질 수 있다
+//	print2()는 실제 클래스(ICTBanner)에서 구현하지 않아도 사용할 수 있다 / implements했을 때 사용하지 않아도 된다
+//	실제 클래스(ICTBanner)에서 print2()를 오버라이딩할 수 있다 / 실제 클래스에서 print2()를 다르게 구현하여 사용할수 있다
+//	default method - interface에서 제공해 주지만 맘에 안들면 각자 구현해서 사용하는 메소드
+	
+	static void print3() {
+		System.out.println("static 메소드");
+	}
+//	자바8 버전 이후부터는 인터페이스에 스태틱 메서드(static method)를 사용할 수 있다
+//	인터페이스에 스태틱 메서드를 구현하면 인터페이스명.스태틱메서드명 과 같이 사용하여 일반 클래스의 스태틱 메서드를 사용하는 것과 동일하게 사용할 수 있다 / Banner.print3();
+//	print3()는 실제 클래스(ICTBanner)에서 구현하지 않아도 사용할 수 있다 / implements했을 때 사용하지 않아도 된다 그러나 손댈 수 없다
+//	실제 클래스(ICTBanner)에서 print2()를 오버라이딩할 수 없다
+//	static method - interface에서 제공해주는 메소드 / 오버라이딩할 수 없으므로 제공하는 메소드를 그대로 가져다 쓰라는 의미
+	
 //	int x;
-//	구현이라는 자체를 하지 않기 때문에 안 된다 / 말이 안 된다
+//	구현이라는 자체를 하지 않기 때문에 안 된다 / 멤버를 가질 수 없다 / 말이 안 된다
+	
+	int x = 4;
+//	interface에 정의한 상수 / public static final을 생략해도 자동으로 public static final이 적용된다(다른 형태의 상수 정의는 불가능하다)
+//	실제 클래스(ICTBanner)에서 인터페이스명.x로 상수 값 4를 참조할 수 있다 / implements했을 때 사용하지 않아도 된다 그러나 손댈 수 없다
+//	interface constant - interface에서 정한 값을 바꾸지 못하며 제공해주는 값만 참조 가능하다
 }
 
 ```
