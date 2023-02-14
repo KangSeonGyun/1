@@ -16,10 +16,10 @@ tags: java
 // private      / 필드, 생성자, 메소드        / 클래스 내부           / 클래스 외부
 
 //  접근 제한자   / 클래스 내부 / 동일 패키지 / 상속받은 클래스 / 이외의 영역
-// private	 /     O     /     X     /     X     /    X
-// default	 /     O     /     O     /     X     /    X
-// protected     /     O     /     O     /     O     /    X
-// public	 /     O     /     O     /     O     /    O
+// private	 /      O      /      X      /       X       /    X
+// default	 /      O      /      O      /       X       /    X
+// protected     /      O      /      O      /       O       /    X
+// public	 /      O      /      O      /       O       /    O
 
 // 클래스, 필드, 생성자, 메소드 선언 시 접근 제한자를 생략한다면 default 접근 제한을 가진다
 
