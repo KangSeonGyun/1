@@ -161,17 +161,17 @@ public interface Banner {
 	void print();
 //	인터페이스의 메서드 / interface는 구현하는 것이 아닌 약속만 정의하는 것이다 / Banner 기능에 대한 목록 / 약속에 대한 명세를 쓰는 것이다
 //	public(데이터 서비스) private(숨기기)는 데이터를 갖고 있거나 기능을 구현하고있는 캡슐에서만 의미가 있다
-//	interface Banner에 들어온 Class가 print()를 구현하고 있어야 한다는 약속이다 /  무조건 print() 구현해야 함
+//	interface Banner에 들어온 Class가 print()를 구현하고 있어야 한다는 약속이다 / implements했을 때 무조건 print() 구현해야 함
 //	interface method - 가이드만 줄테니 오버라이딩해라
 
 	default void print2() {
 		System.out.println("default 메소드");
 	}
-//	자바8 버전 이후부터는 디폴트 메서드(default method)를 사용할 수 있다
+//	자바8 버전 이후부터는 디폴트 메서드(default method)를 사용할 수 있다 / 'default'라는 키워드를 명시해야 한다
 //	interface method는 몸통(구현체)을 가질 수 없지만 default method를 사용하면 실제 구현된 형태의 메서드를 가질 수 있다
 //	print2()는 실제 클래스(ICTBanner)에서 구현하지 않아도 사용할 수 있다 / implements했을 때 사용하지 않아도 된다
 //	실제 클래스(ICTBanner)에서 print2()를 오버라이딩할 수 있다 / 실제 클래스에서 print2()를 다르게 구현하여 사용할수 있다
-//	default method - interface에서 제공해 주지만 맘에 안들면 각자 구현해서 사용하는 메소드
+//	default method - interface에서 제공해 주는 걸 쓰거나 맘에 안들면 각자 구현해서 사용하는 메소드
 	
 	static void print3() {
 		System.out.println("static 메소드");
