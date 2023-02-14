@@ -96,6 +96,6 @@ class Program3 {
 
 ```
 
-//참고 Link: [Java자바 - 접근 제한자][id]
+참고 Link: [Java자바 - 접근 제한자][id]
 
-//[id]: https://kephilab.tistory.com/53
+[id]: https://kephilab.tistory.com/53
