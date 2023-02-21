@@ -1,5 +1,5 @@
 ---
-title: Collection, Object, Generic
+title: Collection, Object, Generic 
 tags: java
 ---
 
