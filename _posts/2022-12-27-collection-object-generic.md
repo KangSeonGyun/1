@@ -377,3 +377,7 @@ public class GList<T> {
 }
 
 ```
+
+참고 Link: [JAVA - 제네릭(Generic)의 이해][id]
+
+[id]: https://st-lab.tistory.com/153
