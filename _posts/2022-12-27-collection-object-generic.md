@@ -220,7 +220,7 @@ public class IntList {
 
 ```
 
-Object_Ex.java
+ObjectClass.java
 -------------
 
 ```java
@@ -235,7 +235,7 @@ package com.newlecture.app.util;
 // byte, short, int, long, float, double, char, boolean
 // String은 값 형식이 아닌 참조형식이다
 
-public class Object_Ex {
+public class ObjectClass {
 //	클래스명을 Object로 하면 안 된다
 
 	public static void main(String[] args) {
