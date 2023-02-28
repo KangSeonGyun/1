@@ -167,6 +167,6 @@ public class Anonymous3 {
 
 ```
 
-참고 Link: [JAVA - Comparable 과 Comparator의 이해][id]
+참고 Link: [JAVA - Comparable 과 Comparator의 이해][id2]
 
-[id]: https://st-lab.tistory.com/243
+[id2]: https://st-lab.tistory.com/243
