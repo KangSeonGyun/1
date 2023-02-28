@@ -70,8 +70,9 @@ public class Program {
 //		Generic
 		GList<Integer> gList = new GList<>();
 //		자료형에다가 형식을 넘겼다 / 형식을 여러개 넘길 수 있다 / 객체생성 시 형식을 생략해도 됨 / 앞 형식을 따라감
-//		int는 안 된다
-//		Object로 만들어진 것의 형식명이기 때문에 변환이 될 수 있어야 한다 / get()에서 return시 형변환이 일어남
+//		클래스 내부에서 지정하는 것이 아닌 외부에서 사용자에 의해 지정되는 것
+		
+//		int는 안 된다 / Object로 만들어진 것의 형식명이기 때문에 변환이 될 수 있어야 한다 / get()에서 return시 형변환이 일어남
 //		Object로 형식변환이 가능한 Wrapper Class형식으로 해야한다
 
 		gList.add(3);
@@ -91,6 +92,16 @@ public class Program {
 			System.out.println(gList.get(i));
 //		가변길이 배열확인
 
+//		----------------------------------------------------------------------
+		
+//		Generic Method
+		
+//		GMethod.genericMethod(3); // The method genericMethod(int) is undefined for the type GMethod
+//		GMethod 객체가 생성되기 전에 genericMethod에 접근할 수 있으나 유형을 지정할 방법이 없어 에러남
+		
+		GMethod.genericMethod2(3);
+		System.out.println("<E> returnType : " + GMethod.genericMethod2(3.0).getClass().getName()); // <E> returnType : java.lang.Double
+		
 //		----------------------------------------------------------------------
 
 //		Java Collection 프레임워크 (Set, List, Queue)
@@ -374,6 +385,37 @@ public class GList<T> {
 //		get메소드로 반환할 때 T형으로 변환해 준다
 	}
 
+}
+
+```
+
+GMethod.java
+-------------
+
+```java
+
+package com.newlecture.app.util;
+
+public class GMethod<E> {
+
+	static E genericMethod(E o) { // Cannot make a static reference to the non-static type E
+//	클래스와 같은 E 타입이더라도 static 메소드는 객체가 생성되기 이전 시점에 메모리에 먼저 올라가기 때문에 E 유형을 클래스로부터 얻어올 방법이 없다.
+//	따라서 제네릭이 사용되는 메소드를 정적메소드로 두고 싶은 경우 제네릭 클래스와 별도로 독립적인 제네릭이 사용되어야 한다
+		return o;
+	}
+	
+//	----------------------------------------------------------------------------------------------
+	
+//	[접근 제어자] <제네릭타입> [반환타입] [메소드명]([제네릭타입] [파라미터]) {
+//	텍스트
+//	}
+//	클래스와는 다르게 반환타입 이전에 <> 제네릭 타입을 선언한다.
+//	파라미터 타입에 따라 제네릭타입이 결정
+	
+	public static <E> E genericMethod2(E o) {
+//	해당 메소드의 E타입은 제네릭 클래스의 E타입과 다른 독립적인 타입이다
+		return o;
+	}
 }
 
 ```
