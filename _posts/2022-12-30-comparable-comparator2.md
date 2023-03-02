@@ -5,7 +5,7 @@ tags: java
 
 Link: [Comparable, Comparator][id]
 
-[id]: https://ksg0000.github.io/2022/12/28/comparable-comparator.html
+[id]: https://ksg0000.github.io/2022/12/30/comparable-comparator.html
 
 Anonymous.java
 -------------
