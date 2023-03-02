@@ -3,9 +3,9 @@ title: Collection
 tags: java
 ---
 
-Link: [Generic][id]
+Link: [Generic 2][id]
 
-[id]: https://ksg0000.github.io/2022/12/28/generic.html
+[id]: https://ksg0000.github.io/2022/12/28/generic2.html
 
 Program.java
 -------------
