@@ -64,9 +64,6 @@ public class Program {
 //		결국 형변환 → UnBoxing / int num2 = new Integer(7); → int num2 = 7;
 		System.out.println(num2); // 7
 
-//		num2 = (Integer) objectList.get(1);
-		System.out.println(num2); // java.lang.IndexOutOfBoundsException / 에러
-
 //		----------------------------------------------------------------------
 
 //		Generic
