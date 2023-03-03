@@ -1,5 +1,5 @@
 ---
-title: Collection 
+title: Collection
 tags: java
 ---
 
@@ -85,7 +85,3 @@ public class Program {
 }
 
 ```
-
-참고 Link: [Java - 자바 컬렉션 프레임워크][id2]
-
-[id2]: https://st-lab.tistory.com/142
