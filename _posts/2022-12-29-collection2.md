@@ -19,7 +19,7 @@ Link: [Collection][id]
    
    
    
-### 자료구조의 분류 / 형태에 따른 자료구조 분류
+### 형태에 따른 자료구조의 분류
 
 자료구조 분류법은 많은 분류법이 있지만, 대표적으로 많이 분류되는 방법으로   
 선형 자료구조(Linear Data Structure)와 비선형 자료구조(Nonlinear Data Structure)로 나눌 수도 있다.
