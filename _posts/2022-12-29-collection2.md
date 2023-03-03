@@ -234,7 +234,7 @@ Set(세트)는 말 그대로 '집합'이다. Set의 가장 큰 특징이라 하�
 2. LinkedHashSet
 3. TreeSet
 
-**Set/ Interface에 선언된 대표적인 메소드**
+**Set/SortedSet Interface에 선언된 대표적인 메소드**
 <img src="/assets/images/Java_Set_SortedSet_Interface.png" width="100%" height="100%" title="참고 이미지" alt="이미지" />
 
 Set Interface을 구현하는 클래스들은 앞서 말했듯이 HashSet, LinkedHashSet, TreeSet 이렇게 3가지가 있다. 좀더 구체적으로 말하자면 TreeSet은 Set Interface를 상속받은 SortedSet Interface를 구현하고 있다. 그리고 **Set의 가장 큰 특징**은 **'중복되는 데이터를 넣지 못한다는 점'**이고, **LinkedHashSet을 제외하고 대부분의 Set은 '입력 순서대로의 저장순서를 보장하지 않는다는 점'**이다.
@@ -273,7 +273,7 @@ Set<T> treeset = new TreeSet<>();
 ##### 적절한 자료구조 사용하기
 
 각각의 장단점은 앞서 설명했으니, 간략하게만 어떤 상황에 어떤 자료구조를 쓰는 것이 알맞은가에 대해 알려주고자 한다.
-<img src="/assets/images/Java_Set_SortedSet_Interface.png" width="100%" height="100%" title="참고 이미지" alt="이미지" />
+<img src="/assets/images/Java_Collection_Flowchart.png" width="100%" height="100%" title="참고 이미지" alt="이미지" />
 
 여기서 설명한 Collection에 대한 것들은 모두 단일 value만 갖고 있기 때문에 첫 갈래에서 왼쪽으로 뻗어나가는 것들은 아직은 무시해도 된다.
 
