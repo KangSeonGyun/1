@@ -48,7 +48,7 @@ Framework - 어떤 문제를 해결하기 위한 구조의 뼈대가 되는 기�
 자바에서 제공하는 Collection은 크게 3가지 인터페이스로 List(리스트), Queue(큐), Set(집합)으로 나뉘어 있다.   
 앞서 설명한 '형태에 따른 자료구조'라고 보면 된다. 그리고 각 분야별로 '구현' 된 것들이 있다.
 
-<img src="/assets/images/java-collection.png" width="100%" height="100%" title="참고 이미지" alt="이미지" />
+<img src="/assets/images/Java_Collection.png" width="100%" height="100%" title="참고 이미지" alt="이미지" />
 
 점선은 구현 관계이고, 실선은 확장 관계다. (인터페이스끼리는 다중 상속이 가능하다) 또한 Collection을 구현한 클래스 및 인터페이스들은 모두 java.util 패키지에 있다.
 
@@ -77,16 +77,20 @@ Iteration 이라는 단어가 '반복', '되풀이'를 의미한다. Iterable �
 ***
 
 ##### List Interface(리스트 인터페이스)
+
 대표적인 선형 자료구조로 주로 순서가 있는 데이터를 목록으로 이용할 수 있도록 만들어진 인터페이스다. 좀 더 쉽게 얘기하면 우리가 배열에서 쓸 때 int[] array = new int[10]; 처럼 쓴다. 하지만, 이 처럼 선언한 배열의 경우 10개의 공간 외에는 더이상 사용하지 못한다. 즉, array[13] = 32; 라고 해주더라도 할당된 크기(범위) 밖이기 때문에 IndexOutofBoundsException 라는 에러가 발생한다.
 
 이러한 단점을 보완하여 List를 통해 구현된 클래스들은 '동적 크기'를 갖으며 배열처럼 사용할 수 있게 되어있다.
 
 한마디로 배열의 기능 + 동적 크기 할당이 합쳐져 있다고 보면 된다.
 
-<List Interface를 구현하는 클래스>
-1. ArrayList
-2. LinkedList
+**<List Interface를 구현하는 클래스>**
+1. ArrayList   
+2. LinkedList   
 3. Vector (+ Vector를 상속받은 Stack)
+
+**<List Interface에 선언된 대표적인 메소드>**
+<img src="/assets/images/Java_List_Interface.png" width="100%" height="100%" title="참고 이미지" alt="이미지" />
 
 Program.java
 -------------
