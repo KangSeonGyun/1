@@ -288,26 +288,26 @@ Set<T> treeset = new TreeSet<>();
 위에서 설명한 9가지 자료구조들을 직접 구현하여 포스팅을 할 것이다. 다만 몇몇 부분은 유사하거나 겹치는 부분이 많아 몇 개는 추리고, 몇 개는 중요한 자료구조라 추가하여 포스팅하겠다. 목록은 다음과 같다.   
 (주황색 글은 포스팅이 완료된 링크, 흰색의 경우 아직 포스팅 되지 않은 것입니다.)
 
-1. List Interface
-	1-1. ArrayList
-	1-2. LinkedList - 1 (단일 연결 리스트)
-	1-3. LinkedList - 2 (이중 연결 리스트)
+1. List Interface   
+	1-1. ArrayList   
+	1-2. LinkedList - 1 (단일 연결 리스트)   
+	1-3. LinkedList - 2 (이중 연결 리스트)   
 
-2. Stack Interface
+2. Stack Interface   
 	2-1. Stack
 
-3. Queue Interface
-	3-1. ArrayQueue
-	3-2. LinkedListQueue
-	3-3. ArrayDeque
-	3-4. LinkedListDeque
- 		번외. Heap
+3. Queue Interface   
+	3-1. ArrayQueue   
+	3-2. LinkedListQueue   
+	3-3. ArrayDeque   
+	3-4. LinkedListDeque   
+ 		번외. Heap   
 	3-5. PriorityQueue
 
-4. Set Interface
-	4-1. HashSet
-	4-2. LinkedHashSet
- 		번외1. BinarySearchTree
+4. Set Interface   
+	4-1. HashSet   
+	4-2. LinkedHashSet   
+ 		번외1. BinarySearchTree   
 	4-3. TreeSet
 
 보통 자료구조를 구현한다라고 하면 링크(Node)연결을 기반으로 구현하거나 Object[] 배열로 구현하는게 정석이다. 그렇기 때문에 대부분은 **Node 또는 Object[] 를 활용하여 구현 할 것**이다.
