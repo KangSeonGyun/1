@@ -16,7 +16,7 @@ package ex1.has_a;
 // main과 main에서 사용된 캡슐이 있다 / main(제품) main에서 사용된 캡슐(의존객체, 부품)
 // 부품과 부품에서 사용된 캡슐이 있다 / ExamConsole캡슐(제품)에서 사용된 Exam캡슐(부품) / main에겐 부품인 ExamConsole캡슐이 제품이 될 수 있다
 
-// Dependency(의존객체, 종속성객체)
+// Dependency(의존객체, 종속성객체, 부품)
 // 매서드 내에서만 일시적으로 생성하여 사용되는 객체
 // 클래스가 내에서가 아닌 함수(main)내에서만 사용되는 이용(부품)관계 
 // 예) Scanner, inheritance <-> ExamConsole
