@@ -22,10 +22,10 @@ ExamConsole <-> Exam
 ```java
 // Composition has a
 A a = new A();
-
-// A가 생성될 때 A의 생성자에서 B를 결합하므로 부품 교체가 힘들다
-// 사용자가 부품 B의 존재를 알 수 없다
 ```
+A가 생성될 때 A의 생성자에서 B를 결합하므로 부품 교체가 힘들다.   
+사용자가 부품 B의 존재를 알 수 없다.
+
 ```java
 // Association has a
 B b = new B();
