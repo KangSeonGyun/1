@@ -78,23 +78,11 @@ window.addEventListener("load", function() {
 		비동기형의 문제점 해결. 응답이 온 뒤에 console.log를 찍는다. 콜백함수
 	-----------------------------------------------------
 	
-	th:attr="data-cid=${c.id}"
-	
-	타임리프를 통해 html의 dataset을 심어줬다
-	//      데이터 수집을 해야함 3 - 27 추가
-        let elLi = (tagName === 'LI') ? e.target : e.target.parentNode;
 
-        console.log(elLi.dataset.cid);
+       
         
+        ----------------------------admin menu list 3/27
 
-        const request = new XMLHttpRequest();
-        request.open("GET", 'http://localhost:8080/menus?c=${categoryId}', true);
-        // 여기 까지
-        
-        
-        ----------------------------admin menu list
-        
-        
         
         	@GetMapping("list")
 	public String list(
@@ -111,6 +99,53 @@ window.addEventListener("load", function() {
 		return "admin/menu/list";
 
 	}
+	
+	-----------------------------------------------------------------
+	
+	window.addEventListener("load", function () {
+    const menuList = document.querySelector(".menu-list");
+    let ul = document.querySelector(".menu-category>ul");
+    ul.onclick = function (e) {
+
+        e.preventDefault();
+
+        let tagName = e.target.tagName;
+
+        if (tagName != 'LI' && tagName != 'A')
+            return;
+
+        // 데이터 수집을 해야함
+        let elLi = (tagName === 'LI') ? e.target : e.target.parentNode;
+
+        console.log(elLi.dataset.cid);
+        // th:attr="data-cid=${c.id}"
+        // 타임리프를 통해 html의 dataset을 심어줬다.
+
+        let categoryId = elLi.dataset.cid;
+
+        const request = new XMLHttpRequest();
+        request.onload = function () {
+            console.log(request.responseText);
+
+            let menus = JSON.parse(request.responseText);
+
+            // 목록을 지우는 방법
+            // menuList.children[0].remove();
+            // menuList.firstElementChild.remove();
+            // menuList.removeChild(menuList.firstElementChild);
+
+            // 목록을 지우는 방법2
+            while (menuList.firstElementChild)
+                menuList.firstElementChild.remove();
+
+        }
+
+        request.open("GET", 'http://localhost:8080/menus?c=${categoryId}', true);
+        request.send();
+        console.log(request.responseText);
+
+    };
+});
 	
 	
 	
