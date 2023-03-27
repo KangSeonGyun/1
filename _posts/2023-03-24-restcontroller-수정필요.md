@@ -81,5 +81,36 @@ window.addEventListener("load", function() {
 	th:attr="data-cid=${c.id}"
 	
 	타임리프를 통해 html의 dataset을 심어줬다
+	//      데이터 수집을 해야함 3 - 27 추가
+        let elLi = (tagName === 'LI') ? e.target : e.target.parentNode;
+
+        console.log(elLi.dataset.cid);
+        
+
+        const request = new XMLHttpRequest();
+        request.open("GET", 'http://localhost:8080/menus?c=${categoryId}', true);
+        // 여기 까지
+        
+        
+        ----------------------------admin menu list
+        
+        
+        
+        	@GetMapping("list")
+	public String list(
+			@RequestParam(name = "p", defaultValue = "1") int page,
+			@RequestParam(name="c", required = false) Integer categoryId,
+			@RequestParam(name = "q", required = false) String query,
+			Model model
+			) throws UnsupportedEncodingException {
+
+		
+		List<MenuView> list = service.getViewList(page, categoryId, query);
+		model.addAttribute("list", list);
+
+		return "admin/menu/list";
+
+	}
+	
 	
 	
