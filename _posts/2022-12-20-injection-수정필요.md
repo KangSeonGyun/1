@@ -3,6 +3,27 @@ title: Injection
 tags: java
 ---
 
+
+
+A제품에 B부품(Dependency)이 있을 경우 A와 B를 조립(Injection)하는 것을 DI라 한다.   
+조립(Injection)의 방법은 Setter Injection(조립형)과 Construction Injection(조립형)이 있다.
+
+**Setter Injection**
+
+```java
+B b = new B();
+A a = new A();
+
+a.set(b);
+```
+**Construction Injection**
+
+```java
+B b = new B();
+A a = new A(b);
+```
+
+
 ```java
 
 package ex1;
