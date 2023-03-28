@@ -43,10 +43,17 @@ window.addEventListener("load", function() {
 	let ul = this.document.querySelector(".menu-category>ul");
 
 	ul.onclick = function(e) {
+		//	function만 지역화. 람다는 지역화가 안된다?
+		
 		e.preventDefault();
+		//	preventDefault. a링크와 onclick 이벤트가 겹쳤다. a링크를 클릭해도 페이지를 다시 로드하지 않는다
+		
 		let tagName = e.target.tagName;
+		//	tagName은 태그명을 대문자로 보여준다
+		
 		if (tagName != "LI" && tagName != 'A')
 			return;
+		//	LI 나 A태그를 클릭하지 않으면 if 후에 코드를 실행하지 않는다
 
 		const request = new XMLHttpRequest();
 		request.open("GET", "http://localhost:8080/menus", true);
@@ -56,14 +63,12 @@ window.addEventListener("load", function() {
 		request.send();
 		//	동기형은 send 후 응답올때까지 아무것도 못한다. 응답이 온 뒤 아래 console.log가 실행된다
 		console.log(request.responseText);
-		//	비동기형은 아직 응답이 오지 않았음에도 console.log가 실행되므로 빈 텍스트가 찍힌다. 응답이 오기전에 다른 행동을 할 수 있다
+		//	비동기형은 아직 응답이 오지 않아도 console.log가 실행되므로 빈 텍스트가 찍힐 수 있다. 응답이 오기전에 다른 행동을 할 수 있다
+		
+		//	request.responseText - 응답이 온 text는 JSON형식으로 온다
 	};
-	
-	//	function만 지역화. 람다는 지역화가 안된다?
-	//	tagName은 태그명을 대문자로 보여준다
-	//	preventDefault. a링크와 onclick 이벤트가 겹쳤다. a링크를 클릭해도 페이지를 다시 로드하지 않는다
 
-	//	LI 나 A태그를 클릭하지 않으면 if 후에 코드를 실행하지 않는다
+
 
 	-----------------------------------------------------
 	
@@ -79,73 +84,57 @@ window.addEventListener("load", function() {
 	-----------------------------------------------------
 	
 
-       
-        
-        ----------------------------admin menu list 3/27
-
-        
-        	@GetMapping("list")
-	public String list(
-			@RequestParam(name = "p", defaultValue = "1") int page,
-			@RequestParam(name="c", required = false) Integer categoryId,
-			@RequestParam(name = "q", required = false) String query,
-			Model model
-			) throws UnsupportedEncodingException {
-
-		
-		List<MenuView> list = service.getViewList(page, categoryId, query);
-		model.addAttribute("list", list);
-
-		return "admin/menu/list";
-
-	}
+	--27일 js 현황--------------------------------
 	
-	-----------------------------------------------------------------
-	
-	window.addEventListener("load", function () {
-    const menuList = document.querySelector(".menu-list");
-    let ul = document.querySelector(".menu-category>ul");
-    ul.onclick = function (e) {
+window.addEventListener("load", function() {
+	const menuList = document.querySelector(".menu-list");
+	let ul = document.querySelector(".menu-category>ul");
+	ul.onclick = function(e) {
 
-        e.preventDefault();
+		e.preventDefault();
 
-        let tagName = e.target.tagName;
+		let tagName = e.target.tagName;
+		// tagName은 LI 혹은 A여야 한다
+		// li태그가 클릭됐다면 LI가 저장되며 a태그를 클릭됐다면 A를 저장한다
 
-        if (tagName != 'LI' && tagName != 'A')
-            return;
+		if (tagName != 'LI' && tagName != 'A')
+			return;
 
-        // 데이터 수집을 해야함
-        let elLi = (tagName === 'LI') ? e.target : e.target.parentNode;
+		// 데이터 수집을 해야함
+		let elLi = (tagName === 'LI') ? e.target : e.target.parentNode;
+		// LI가 클릭됐다면 e.target은 li다. <li data-cid="4"> <a href="list?c=4">쿠키</a> </li>
+		// A가 클릭 a의 부모 li다. <li data-cid="4"> <a href="list?c=4">쿠키</a> </li>
+		// li와 a어떤것을 클릭해도 결국 elLi에는 li가 선택된다 
 
-        console.log(elLi.dataset.cid);
-        // th:attr="data-cid=${c.id}"
-        // 타임리프를 통해 html의 dataset을 심어줬다.
+		let categoryId = elLi.dataset.cid;
+		// th:attr="data-cid=${c.id}"
+		// 타임리프를 통해 html의 li에 dataset을 심어줬다.
+		// 클릭한 li의 data-cid(카테고리 아이디)를 가져온다
 
-        let categoryId = elLi.dataset.cid;
+		const request = new XMLHttpRequest();
+		request.onload = function() {
 
-        const request = new XMLHttpRequest();
-        request.onload = function () {
-            console.log(request.responseText);
+			let menus = JSON.parse(request.responseText);
+			//	JSON 형식으로 온 text를 배열로 만들었다.
 
-            let menus = JSON.parse(request.responseText);
+			//	카테고리 클릭시 메뉴 하나를 지우는 방법
+			//	menuList.children[0].remove();
+			//	menuList.firstElementChild.remove();
+			//	menuList.removeChild(menuList.firstElementChild);
 
-            // 목록을 지우는 방법
-            // menuList.children[0].remove();
-            // menuList.firstElementChild.remove();
-            // menuList.removeChild(menuList.firstElementChild);
+			//	카테고리 클릭시 메뉴 전체를 지우는 방법
+			//	while (menuList.firstElementChild)
+			//	menuList.firstElementChild.remove();
+			//	모든 자식이 지워지며 자식이 없다면 null을 반환한다. Thuthy, falsy 기억하자
+		}
 
-            // 목록을 지우는 방법2
-            while (menuList.firstElementChild)
-                menuList.firstElementChild.remove();
+		request.open("GET", `http://localhost:8080/menus?c=${categoryId}`, true);
+		// ''가 아닌 ``backtick 이다
+		request.send();
 
-        }
-
-        request.open("GET", 'http://localhost:8080/menus?c=${categoryId}', true);
-        request.send();
-        console.log(request.responseText);
-
-    };
+	};
 });
+
 	
 	
 	
