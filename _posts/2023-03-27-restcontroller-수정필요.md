@@ -89,6 +89,32 @@ window.addEventListener("load", function() {
 window.addEventListener("load", function() {
 	const menuList = document.querySelector(".menu-list");
 	let ul = document.querySelector(".menu-category>ul");
+	const form = document.querySelector(".search-header form");
+	const findButton = form.querySelector(".icon-find");
+
+	findButton.onclick = function(e) {
+		// findButton을 클릭했을 때
+
+		e.preventDefault();
+		//	태그에서 발생하는 기본행위 submit을 막는다
+
+		const queryInput = form.querySelector("input[name=q]");
+		let query = queryInput.value;
+		//	text input박스의 입력값을 가져왔다
+
+		const request = new XMLHttpRequest();
+		request.onload = function() {
+			let menus = JSON.parse(request.responseText);
+			bind(menus);
+			// bind로 공통화
+		};
+
+		request.open("GET", `http://localhost:8080/menus?q=${query}`, true);
+		request.send();
+	}
+
+
+
 	ul.onclick = function(e) {
 
 		e.preventDefault();
@@ -100,11 +126,29 @@ window.addEventListener("load", function() {
 		if (tagName != 'LI' && tagName != 'A')
 			return;
 
+		// --------------------------------------------------------
+
 		// 데이터 수집을 해야함
 		let elLi = (tagName === 'LI') ? e.target : e.target.parentNode;
 		// LI가 클릭됐다면 e.target은 li다. <li data-cid="4"> <a href="list?c=4">쿠키</a> </li>
 		// A가 클릭 a의 부모 li다. <li data-cid="4"> <a href="list?c=4">쿠키</a> </li>
 		// li와 a어떤것을 클릭해도 결국 elLi에는 li가 선택된다 
+
+		//	elLi.className = "menu-selected"
+		//	이렇게 class를 넣으면 안된다. 다른 class가 존재할 수 있기 때문
+
+		let curLi = ul.querySelector("li.menu-selected");
+
+		if (curLi === elLi)
+			return;
+		// 현재 menu-selected가 있는 li와 내가 클릭한 li가 같을 땐 data도 요청하지 않는다
+
+		curLi.classList.remove("menu-selected");
+		elLi.classList.add("menu-selected");
+		//	현재 menu-selected가 있는 li와 내가 클릭한 li가 같지 않을 때 class 수정
+		//	클릭한 li에 선택됐다는 효과의 class 추가
+
+		// --------------------------------------------------------
 
 		let categoryId = elLi.dataset.cid;
 		// th:attr="data-cid=${c.id}"
@@ -113,27 +157,106 @@ window.addEventListener("load", function() {
 
 		const request = new XMLHttpRequest();
 		request.onload = function() {
-
+			
 			let menus = JSON.parse(request.responseText);
 			//	JSON 형식으로 온 text를 배열로 만들었다.
+			bind(menus);
 
-			//	카테고리 클릭시 메뉴 하나를 지우는 방법
-			//	menuList.children[0].remove();
-			//	menuList.firstElementChild.remove();
-			//	menuList.removeChild(menuList.firstElementChild);
-
-			//	카테고리 클릭시 메뉴 전체를 지우는 방법
-			//	while (menuList.firstElementChild)
-			//	menuList.firstElementChild.remove();
-			//	모든 자식이 지워지며 자식이 없다면 null을 반환한다. Thuthy, falsy 기억하자
-		}
-
+		};
 		request.open("GET", `http://localhost:8080/menus?c=${categoryId}`, true);
 		// ''가 아닌 ``backtick 이다
 		request.send();
-
 	};
+
+	function bind(menus) {
+		//	카테고리 클릭시 메뉴 하나를 지우는 방법
+		//	menuList.children[0].remove();
+		//	menuList.firstElementChild.remove();
+		//	menuList.removeChild(menuList.firstElementChild);
+
+		//	카테고리 클릭시 메뉴 전체를 지우는 방법
+		//	while (menuList.firstElementChild)
+		//		menuList.firstElementChild.remove();
+		//	모든 자식이 지워지며 자식이 없다면 null을 반환한다. Thuthy, falsy 기억하자
+
+		//	카테고리 클릭시 텍스트를 추가하는 방법
+		//	menuList.textContent = "<span style='color:blue;'>text</span>";
+		//	menuList.innerText = "<span style='color:blue;'>text</span>";
+		//	menuList.innerHTML = "<span style='color:blue;'>text</span>";
+		//	첫 번째, 두 번째는 span태그가 text로 전부 출력되지만 마지막은 style이 적용된 text가 나온다
+
+		//	카테고리 클릭시 메뉴 전체를 지우는 또다른 방법
+		menuList.innerHTML = "";
+
+		// ------------------------------------------------------------
+
+		//	목록 만들어 채우기
+		//	1. DOM 객체를 만들어 추가
+		let menuSection = document.createElement("section");
+		menuSection.className = "menu";
+		//	엘리먼트를 만들고 class를 부여했다
+
+		let form = document.createElement("form");
+		form.className = "";
+		//	엘리먼트를 만들고 class를 부여했다. 하지만 class는 없다
+
+		//	menuSection.appendChild(form); // Node interface의 기능
+		menuSection.append(form); // Element interface의 기능
+		//	section과 form을 합치는 방법 두가지.
+
+		menuList.append(menuSection);
+		//	menuList에 menuSection을 붙였다
+
+		// ------------------------------------------------------------
+
+
+		//	목록 만들어 채우기
+		//	2. 문자열을 이용한 객체 생성
+
+		for (let m of menus) {
+			var template = `<section class="menu">
+			            <!-- getViewList()로 생성된 10개 메뉴 리스트가 만큼 메뉴가 출력된다 -->
+			                <form class="">
+			                    <h1><span>${m.name}</span>/<span>${m.categoryName}</span></h1> 
+			                    <div class="menu-img-box">
+			                        <a href="detail?id=${m.id}"> <img class="menu-img" src="/image/product/${m.img}"></a>
+			                        <!-- url에 쿼리스트링으로 menu의 id가 나온다 -->
+			                    </div>    
+			                    <div class="menu-price">${m.price}</div>
+			                    <div class="menu-option-list">
+			                        <span class="menu-option">
+			                            <input class="menu-option-input" type="checkbox">
+			                            <label>ICED</label>
+			                        </span>            
+			                        <span class="menu-option ml-2">
+			                            <input class="menu-option-input" type="checkbox">
+			                            <label>Large</label>
+			                        </span>
+			                    </div>
+			                    <div class="menu-button-list">
+			                        <input class="btn btn-fill btn-size-1 btn-size-1-lg" type="submit" value="담기">
+			                        <input class="btn btn-line btn-size-1 btn-size-1-lg ml-1" type="submit" value="주문하기">
+			                    </div>
+			                </form>
+			            </section>`;
+			//	''는 줄 바꿈이 있는 문자열을 변수에 넣을 수 없다
+			//	``은 변수에 여러줄의 문자열을 넣을 수 있다
+
+			//	menuList.innerHTML += template;
+			//	메뉴 하나를 html문서에 출력했다. 하지만 이렇게 하면 안된다
+			//	문자열을 누적하면 오버헤드가 일어난다.
+			//	새로 만든다???
+
+			menuList.insertAdjacentHTML("beforeend", template);
+			//	template를 누적하는 좋은 예시
+			//	beforeend는 section 뒤에 section을 누적하기 위한 옵션이다. 검색해보자
+			//	성능면에서 체감할 수 있을정도로 엄청난 차이가 난다.
+		}
+
+	}
+
 });
+
 
 	
 	
