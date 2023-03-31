@@ -7,38 +7,42 @@ rest는 html이 아닌 javaspript가 이 값들을 이용한다.
 
 처음 page를 블러올 땐 @controller를 이용하고 이후 값만 바꿀 땐 @RestController를 이용한다
 
+```java
 	@GetMapping("/menus/{id}")
 	public String get(
 			@PathVariable("id") int menuId) {
 		return "menu " + menuId;
 	}
+```
 	
 메소드의 인자는 쿼리스트링에서 찾는다. 쿼리스트링이 아닌 url에 있는 값을 받고 싶을 수 있다.   
 url의 경로의 id를 메소드의 파라미터 menuId로 받는 방법은 @PathVariable이다. return은 url경로의 id가 출력된다.
 
+```java
 	@GetMapping("/menus/{id}")
 	public Menu get(
 			@PathVariable("id") int id) {
 		Menu menu = service.getById(id);
 		return menu;
 	}
+```
 	
 원래는 반환형식을 객체(Menu)로 던지면 안 되지만 spring이 알아서 객체를 json형태로 반환한다.
 
+```java
 	@PutMapping
 	public String edit(
 		@PathVariable("id") int id) {
 		return "menu edit:" + id;
 	}
-	
-
+```
 
 script는 브라우저 내에서만 이용가능하다 브라우저 밖으로 벗어나는 일은 금기 였다.
 com component는 모든 언어에서 이용가능했다. javascript가 이걸로 windows library를 이용해 밖에서 데이터를 가져올 수 있게됐다.
 com component가 activeX다.
 javascript를 사용하는 브라우저가 동기와 비동기를 지원한다
 
-
+```js
 window.addEventListener("load", function() {
 	let ul = this.document.querySelector(".menu-category>ul");
 
@@ -67,11 +71,11 @@ window.addEventListener("load", function() {
 		
 		//	request.responseText - 응답이 온 text는 JSON형식으로 온다
 	};
+```
 
+---------------------------------------------
 
-
-	-----------------------------------------------------
-	
+```js
 		const request = new XMLHttpRequest();
 		request.onload = function(){
 			console.log(request.responseText);
@@ -79,13 +83,15 @@ window.addEventListener("load", function() {
 		
 		request.open("GET", "http://localhost:8080/menus", true);
 		request.send();
-		
-		비동기형의 문제점 해결. 응답이 온 뒤에 console.log를 찍는다. 콜백함수
-	-----------------------------------------------------
-	
+```
 
-	--27일 js 현황--------------------------------
+비동기형의 문제점 해결. 응답이 온 뒤에 console.log를 찍는다. 콜백함수
+
+-----------------------------------------------------
 	
+--27일 js 현황--------------------------------
+	
+```js
 window.addEventListener("load", function() {
 	const menuList = document.querySelector(".menu-list");
 	let ul = document.querySelector(".menu-category>ul");
@@ -256,6 +262,7 @@ window.addEventListener("load", function() {
 	}
 
 });
+```
 
 
 	
