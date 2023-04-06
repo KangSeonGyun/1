@@ -5,7 +5,7 @@ tags: javascript
 
 Link: [Js Module][id]
 
-[id]: https://ksg0000.github.io/2023/01/09/js-module.html
+[id]: https://ksg0000.github.io/2023/01/09/es6-module.html
 
 ```js
 
