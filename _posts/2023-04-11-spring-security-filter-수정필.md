@@ -40,13 +40,13 @@ public class AuthFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-			
+
 		System.out.println("입구 필터가 실행되었습니다.");
-		
+
 		chain.doFilter(request, response);
-		
+
 		System.out.println("출구 필터가 실행되었습니다.");
-	
+
 	}
 }
 ```
@@ -126,4 +126,4 @@ Filter는 xml(구 방식)로도 구현할 수 있지만 해당 예제는 Java로
 ```
 Spring Starters를 통해 간단히 추가할 수 있으며, pom.xml에 위와 같은 dependency가 추가 된다.
 
-참조 : [자바캔](https://javacan.tistory.com/entry/58)
+참고 : [자바캔](https://javacan.tistory.com/entry/58)
