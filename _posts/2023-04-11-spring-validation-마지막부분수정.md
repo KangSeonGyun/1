@@ -37,7 +37,7 @@ public class HomeController {
 
 세션 ID가 잘 발급 되었다면 다음과 같은 과정이 필요하다.
 
-1. 로그인 여부를 확인하여 로그인이 되지 않았으면 로그인 페이지르 보낸다.
+1) 로그인 여부를 확인하여 로그인이 되지 않았으면 로그인 페이지르 보낸다.
 
 ```java
 if(session.getAttribute("isAuth")==null)
@@ -46,8 +46,12 @@ if(session.getAttribute("isAuth")==null)
 //	아니라면 로그인 페이지(/uesr/login)로 보낸다.
 ```
 
-2. 로그인 한 계정의 권한이 admin인지 확인해야 한다.
-???
+2) 로그인 한 계정의 권한이 admin인지 확인해야 한다.
+
+```java
+// ???
+```
+
 
 ### 인증
 ???
