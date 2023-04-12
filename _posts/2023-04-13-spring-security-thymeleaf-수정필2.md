@@ -11,6 +11,7 @@ tags: spring thymeleaf
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
 ```
+
 pom.xml에서 dependency 추가. 맨뒤 숫자 6은 현재 사용 중인 spring 버전이다
 
 ```html
