@@ -5,9 +5,9 @@ tags: spring
 
 해당 예제는 Passward 암호화 과정 및 Security를 생략했다.
 
-### 각 층 구현
+## 각 층 구현
 
-#### Controller
+### Controller
 
 ```java
 @Controller
@@ -42,7 +42,7 @@ public class UesrController {
 isVaild는 사용자가 입력한 uid(User ID), pwd(PassWard)가 정확하다면 true, 아니면 false이다.   
 자세한 내용은 Service단과 Repository단을 확인해보자.
 
-#### Service
+### Service
 
 ```java
 public interface MemberService {
@@ -85,7 +85,7 @@ uid를 DB에서 찾을 수 있다면 사용자가 유효한 계정을 입력한 
 
 Member가 null이거나 패스워드가 일치하지 않는다면 false를 반환하고 아니면 true를 반환한다.
 
-#### Repository
+### Repository
 
 ```java
 @Mapper
@@ -97,7 +97,7 @@ public interface MemberRepository {
 
 Mybatis Mapper사용
 
-#### Mapper
+### Mapper
 
 ```xml
 <select id="findByUesrname" resultType="Member">
@@ -108,7 +108,7 @@ Mybatis Mapper사용
 사용자가 입력한 uid와 일치하는 username을 찾아 해당 회원의 모든 정보를 Member Entity에 담는다.   
 username이 DB에서 사용자가 입력하는 계정 ID 컬럼명이다. 이유는 후술.
 
-#### Entity Member
+### Entity Member
 
 ```java
 @Data
