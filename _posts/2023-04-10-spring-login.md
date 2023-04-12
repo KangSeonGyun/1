@@ -127,3 +127,39 @@ public class Member {
 사용자가 탈퇴해도 DB의 식별자(PK)는 남겨둬야 한다.   
 계정을 식별자로 할 경우 해당 계정 ID를 다시는 사용하지 못하는 상황이 생긴다.   
 따라서 사용자가 입력하는 계정 ID는 userName으로 했다.   
+
+<details>
+<summary>제목</summary>
+<div markdown="1">
+
+</div>
+</details>
+
+---
+
+<details>
+<summary>제목</summary>
+
+</div>
+</details>
+
+---
+
+<details>
+<div markdown="1">
+
+</div>
+</details>
+
+---
+
+<details>
+<summary>제목</summary>
+
+</details>
+
+---
+
+<details>
+
+</details>
