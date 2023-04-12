@@ -126,4 +126,277 @@ Filter는 xml(구 방식)로도 구현할 수 있지만 해당 예제는 Java로
 ```
 Spring Starters를 통해 간단히 추가할 수 있으며, pom.xml에 위와 같은 dependency가 추가 된다.
 
+```java
+@Configuration
+public class RlandSecurityConfig {
+
+}
+```
+
+RlandSecurityConfig 클래스 생성 후 Bean 담기
+
+```java
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//		HttpSecurity는 import할 때 패키지명을 보면 알 수 있듯이 보안 설정을 위한 Builder다
+//		Filter가 로그인이 안 되었으면 로그인 페이지로 보내며 권한도 확인해준다
+
+		http
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll();
+	}
+				
+//		hasAnyAuthority()를 쓸 때 파라미터가 꼭 ROLE_로 시작해야 하는 규칙이 있다. 예) ROLE_ADMIN
+//		hasAnyRole()은 과거 ROLE_을 꼭 붙여야하는 규칙을 생략해도 된다. 예) ADMIN
+
+//		/admin/**은 ADMIN만
+//		/member/** ADMIN과 MEMBER만
+//		나머지는 전부 허용
+```
+
+/admin 혹은 /member에 들어가면 403 error, 세션 부여됨
+
+//	빌더란?
+//	Lombok에서도 빌더가 있다 all argu 필요
+//	setter가 아닌 오버로드 생성자를 통해 만듦
+
+```java
+//	사용자 데이터 서비스
+//	1. 인메모리 서비스 - 내가 정의한 사용자 리스트?
+//	2. JDBC 서비스
+//	3. LDAP 서비스 - 총무부만 따로 사용?
+	@Bean
+	public UserDetailsService userDetailsService() {
+		UserDetails newlec = User
+				.builder()
+				.username("newlec")
+				.password("111")
+				.roles("ADMIN", "MEMBER")
+				.build();
+		
+		UserDetails dragon = User
+				.builder()
+				.username("dragon")
+				.password("000")
+				.roles("MEMBER")
+				.build();
+		
+		return new InMemoryUserDetailsManager(newlec, dragon);
+	}
+```
+
+이래도 403에러
+
+```java
+		http
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin();
+```
+
+.and() .formLogin(); 이걸 해줘야 로그인 화면이 뜬다 사용자가 로그인 폼을 만들지 않으면 기본 폼을 제공한다.
+이래도 newlec 111을 입력하면 500에러
+There is no PasswordEncoder mapped for the id "null"
+PasswordEncoder가 필요하다
+
+//	양방향, 단방향 암호화 ?
+//	원문을 알면 hash값을 알아 낼 수 있짐나 hash값으로 원문을 만들어 낼 순 없다.
+
+```java
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		
+		return new BCryptPasswordEncoder();	
+	}
+```
+
+예제에선 BCryptPasswordEncoder 사용
+이래도 newlec 111로 로그인이 안된다.
+왜냐하면 111을 암호화하면 $2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O
+password를 위와 같이 수정
+
+엄청큰 파일을 암호화해도 같은 길이의 암호가 만들어진다. 단순 식별자 이기 때문
+
+```java
+		UserDetails newlec = User
+				.builder()
+				.username("newlec")
+				.password("$2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O")
+				.roles("ADMIN", "MEMBER")
+				.build();
+```
+
+newlec의 password를 암호화된 문자열로 수정
+newlec 111을 입력하면 로그인 성공
+왜냐하면 사용자가 입력한 111을 입력하면 $2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O로 암호화 되며 password가 일치한 것이다.
+
+```java
+		UserDetails newlec = User
+				.builder()
+				.username("newlec")
+				.password(passwordEncoder().encode("111"))
+				.roles("ADMIN", "MEMBER")
+				.build();
+```
+
+하지만 암호화된 문자열을 미리 알 수 없으므로 위와 같이 수정
+이로써 사용자가 뭘 입력하는 지는 궁금하지않고 암호화된 문자열이 같으면 비밀번호가 일치한 것이다.
+
+
+```java
+		http
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login");
+```
+
+스프링이 기본으로 제공해주는 로그인 페이지가 아닌 내가 만든 로그인 페이지 사용
+이러고 newlec 111 로그인 시도하면 403에러
+
+```java
+		http
+			.cors()
+			.disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login");
+```
+
+CORS 공격에 대한 대비가 없다?
+same Origin인지 확인할 수 있는 Key가 없다. 혹은 cors 끄기
+하지만 이래도 newlec 111 로그인 시도하면 403에러
+왜냐하면 /user/login 로그인하면 /user/login로 Post요청이 간다.
+스프링은 /login으로 post요청을 보낼 것 이지만 내가만든 post요청을 쓰려면 알려줘야 한다???? 스프링이 로그인 Post로직을 구현하고 있기 때문
+
+```java
+		http
+			.cors()
+			.disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login");
+```
+
+loginProcessingUrl에 매핑된 /user/login으로 Post요청이오면 스프링이 구현하고 있는 로그인 로직을 사용한다는 의미다.
+따라서 form action속성과 맞춰 주기만 하면 막 써도 괜찮다.
+기존에 내가 만들어 놓은 PostMapping /user/login이 있다면 무시된다.
+
+이래도 403에러 CSRF설정이 필요하다. 버전에 따라 cors만 설정해도 되는 경우가 있다
+//	cors csrf 알아보자
+
+```java
+		http
+			.cors().and()
+			.csrf().disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login");
+```
+
+만약 html에서 form태그 input의 name 속성이 스프링이 정한 username, password가 아니라 사용자가 임의로 정한 uid, pwd일 경우 로그인 되지 않는다
+
+```java
+		http
+			.cors().and()
+			.csrf().disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login")
+				.defaultSuccessUrl("/admin/index");
+```
+
+html을 고쳤다면 로그인이 된다 defaultSuccessUrl는 로그인 성공시 이동할 url이다.
+
+
+## Logout
+
+```java
+	@RequestMapping("logout")
+	public String logout(HttpSession session) {
+		
+		session.invalidate();
+		
+		return "redirect:/index";
+	}
+```
+이 요청도 무시된다. Spring이 구현.
+
+```java
+		http
+			.cors().and()
+			.csrf().disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login")
+				.defaultSuccessUrl("/admin/index")
+			.and()
+				.logout()
+					.logoutUrl("/user/logout")
+					.logoutSuccessUrl("/index");
+```
+
+## thymeleaf에서 spring security 사용
+
+```xml
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
+```
+pom.xml에서 dependency 추가. 맨뒤 숫자 6은 현재 사용 중인 spring 버전이다
+
+```html
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security6"
+>
+```
+
+Html(view)에 위와 같이 xml namespace를 추가한다.
+
+```html
+<li sec:authorize="isAnonymous()"><a href="/user/login">로그인</a></li>
+<li sec:authorize="isAuthenticated()"><a href="/user/logout">로그아웃</a></li>
+```
+
+로그인 여부에 따라 로그인, 로그아웃을 교차로 보여준다.
+
+
+https://docs.spring.io/spring-security/reference/servlet/authorization/expression-based.html
+
+https://www.baeldung.com/spring-security-thymeleaf
+
 참고 : [자바캔](https://javacan.tistory.com/entry/58)

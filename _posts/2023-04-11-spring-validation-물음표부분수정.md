@@ -108,7 +108,7 @@ setAttribute로 세션을 부여했다.
 
 ```html
 <li><a th:if="${session.username}==null" href="/user/login">로그인</a></li>
-<li><a th:if="${session.username}!=null" href="/user/login">로그아웃</a></li>
+<li><a th:if="${session.username}!=null" href="/user/logout">로그아웃</a></li>
 ```
 
 session을 활용해 로그인과 로그아웃을 교차로 보여줄 수 있다.   
