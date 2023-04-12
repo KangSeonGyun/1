@@ -3,7 +3,7 @@ title: Spring Security, Filter
 tags: spring
 ---
 
-#### Servlet Filter
+### Servlet Filter
 
 Servlet Filter는 Servlet Container에서 HTTP 요청 및 응답에 대한 전처리 및 후처리 작업을 처리하는 클래스입니다. Servlet Filter는 일반적으로 웹 애플리케이션에서 반복적으로 수행되는 작업을 처리하거나, 보안, 로깅, 인증, 압축 등과 같은 기능을 추가하는 데 사용됩니다.   
 Servlet Filter는 일반적으로 다른 서블릿 또는 JSP와 함께 사용되며, web.xml 또는 Java 코드에서 구성할 수 있습니다.
@@ -109,7 +109,7 @@ HttpServletRequest는 HTTP 요청에 대한 다양한 정보와 기능을 제공
 
 Filter에 대한 내용은 여기까지만 하고 라이브러리를 이용해 보자... 나중에 공부해보자.
 
-#### Spring Security 라이브러리 이용
+### Spring Security 라이브러리 이용
 
 Filter는 xml(구 방식)로도 구현할 수 있지만 해당 예제는 Java로 구현했다.
 
