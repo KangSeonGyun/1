@@ -7,7 +7,7 @@ tags: spring thymeleaf
 인증과 권한을 라이브러리 없이 만들어 볼 것이다.   
 우선 세션에 대한 이해를 돕기위해 예제를 첨부했다.
 
-### 세션 ID 발급
+## 세션 ID 발급
 
 세션 ID/쿠키를 이용해서 사용자가 인증되었던 적이 있는지 확인한다.   
 문서를 요청하고 받게되면 세션 ID가 생긴다. 다음부턴 이 세선 ID를 이용해 인증된 사용자인지 확인한다.   
@@ -33,7 +33,7 @@ public class HomeController {
 
 세션 ID 확인방법 : 브라우저 개발자 도구 → Network → 요청한 문서 클릭
 
-#### 권한 확인
+### 권한 확인
 
 세션 ID가 잘 발급 되었다면 다음과 같은 과정이 필요하다.
 
@@ -53,12 +53,12 @@ if(session.getAttribute("isAuth")==null)
 ```
 
 
-### 인증
+## 인증
 ???
 
 다음 예제는 [이전글](https://ksg0000.github.io/2023/04/10/spring-login.html)과 이어진다.
 
-### 세션 부여
+## 세션 부여
 
 ```java
 @Controller
@@ -114,7 +114,7 @@ setAttribute로 세션을 부여했다.
 session을 활용해 로그인과 로그아웃을 교차로 보여줄 수 있다.   
 session username이 없다면(null 이라면)로그인을, session username이 있다면 로그아웃을 보여준다.
 
-### returnURL
+## returnURL
 
 returnURL이란 사용자가 이전에 보던 페이지로 다시 돌아가기 위해 필요하다.
 
