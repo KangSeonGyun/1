@@ -146,6 +146,8 @@ RlandSecurityConfig 클래스 생성 후 Bean 담기
 				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
 				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
 				.anyRequest().permitAll();
+				
+		return http.build();
 	}
 				
 //		hasAnyAuthority()를 쓸 때 파라미터가 꼭 ROLE_로 시작해야 하는 규칙이 있다. 예) ROLE_ADMIN
@@ -165,7 +167,6 @@ RlandSecurityConfig 클래스 생성 후 Bean 담기
 ```java
 //	사용자 데이터 서비스
 //	1. 인메모리 서비스 - 내가 정의한 사용자 리스트?
-//	2. JDBC 서비스
 //	3. LDAP 서비스 - 총무부만 따로 사용?
 	@Bean
 	public UserDetailsService userDetailsService() {
@@ -246,7 +247,6 @@ newlec 111을 입력하면 로그인 성공
 
 하지만 암호화된 문자열을 미리 알 수 없으므로 위와 같이 수정
 이로써 사용자가 뭘 입력하는 지는 궁금하지않고 암호화된 문자열이 같으면 비밀번호가 일치한 것이다.
-
 
 ```java
 		http
@@ -351,52 +351,247 @@ html을 고쳤다면 로그인이 된다 defaultSuccessUrl는 로그인 성공�
 
 ```java
 		http
-			.cors().and()
-			.csrf().disable()
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
+			.cors()
+			.and()
+				.csrf().disable()
+				.authorizeHttpRequests()
+					.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+					.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+					.anyRequest().permitAll()
 			.and()
 				.formLogin()
-				.loginPage("/user/login")
-				.loginProcessingUrl("/user/login")
-				.defaultSuccessUrl("/admin/index")
+					.loginPage("/user/login")
+					.loginProcessingUrl("/user/login")
+					.defaultSuccessUrl("/admin/index")
 			.and()
 				.logout()
 					.logoutUrl("/user/logout")
 					.logoutSuccessUrl("/index");
 ```
 
-## thymeleaf에서 spring security 사용
+## 사용자 데이터 서비스
 
-```xml
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
-		</dependency>
-```
-pom.xml에서 dependency 추가. 맨뒤 숫자 6은 현재 사용 중인 spring 버전이다
-
-```html
-<html lang="en"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security6"
->
+```java
+@Autowired
+private DataSource dataSource;
 ```
 
-Html(view)에 위와 같이 xml namespace를 추가한다.
+```java
+//	2. JDBC 서비스
+	@Bean
+	public UserDetailsService jdbcUserDetailsService() {
+		
+		JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
+//		application.properties에 DB정보(datasource)가 정의되어 콩자루에 담겨있다.
+		
+		manager.setUsersByUsernameQuery("select username, pwd password, 1 enabled from member where username=?");
+//		로그인 시도한 사람의 계정, 패스워드, enabled(활성화, 비활성화 여부)만 가져와야한다.
+//		우리 DB Table은 활성화, 비활성화 여부를 저장하지 않아 고정값 1로 했다.
+		
+		manager.setAuthoritiesByUsernameQuery("SELECT username, 'ROLE_ADMIN' authority from member where username=?");
+//		member Table에 권한 정보가 없다고 가정하고 고정값 ROLE_ADMIN를 넣었다.
+		
 
-```html
-<li sec:authorize="isAnonymous()"><a href="/user/login">로그인</a></li>
-<li sec:authorize="isAuthenticated()"><a href="/user/logout">로그아웃</a></li>
+		return manager;
+	}
 ```
 
-로그인 여부에 따라 로그인, 로그아웃을 교차로 보여준다.
+## 메뉴 등록 요청을 보낼 때 username을 얻는 방법
 
+세션을 이용하는 것은 올바르지 않다?
 
-https://docs.spring.io/spring-security/reference/servlet/authorization/expression-based.html
+1
 
-https://www.baeldung.com/spring-security-thymeleaf
+```java
+	@PostMapping("reg")
+	public String reg(String title) {
+//		1.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		System.out.println(currentPrincipalName);
+		
+		return "redirect:list";
+	}
+```
+
+2
+
+```java
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Authentication authentication) {
+//		2.
+		String userName = authentication.getName();
+		
+		System.out.println(authentication.getPrincipal());
+		System.out.println(userName);
+		
+		return "redirect:list";
+	}
+```
+
+3
+
+```java
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Authentication authentication) {
+		
+		UserDetails user = (UserDetails) authentication.getPrincipal();
+//		getPrincipal() 이건 유저 정보(UserDetails)를 준다. username password(보호됨), enabled, 권한 등을 알 수 있다
+//		형 변환만 해주면 된다.
+
+		System.out.println(user.getUsername());
+		
+		System.out.println(user.getPassword());
+//		이건 null이 뜬다
+		
+		return "redirect:list";
+	}
+```
+
+4
+
+```java
+
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Principal principal) {
+		
+		System.out.println(principal.getName());
+		
+		return "redirect:list";
+	}
+```
+
+## 알랜드 만의 UserDetails 만들기
+
+```java
+public class RlandUserDetails extends User implements UserDetails {
+
+}
+```
+
+User를 상속받아도 된다
+
+```java
+@Data
+@ToString
+public class RlandUserDetails implements UserDetails {
+//	Rland만의 UserDetails 그릇
+
+	private Long id;
+	private String email;
+	private String username;
+	private String password;
+	private List<GrantedAuthority> authorities;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return authorities;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return username;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+}
+```
+
+```java
+//@Service
+public class RlandUserDetailsService implements UserDetailsService {
+
+	@Autowired
+	private MemberRepository repository;
+	
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+//		RlandUserDetails 그릇에 담을 데이터 준비
+		Member member = repository.findByUesrname(username);
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		
+//		데이터가 준비 되었으면 이제 RlandUserDetails 그릇 객체를 만들어서 데이터 반환해주면 끝
+		RlandUserDetails user = new RlandUserDetails();
+		user.setId(member.getId());
+		user.setUsername(member.getUserName());
+		user.setPassword(member.getPwd());
+		user.setEmail(member.getEmail());
+		user.setAuthorities(authorities);
+		
+		return user;
+	}
+
+}
+```
+
+## 다시 사용자 데이터 서비스
+
+```java
+//	3. Custom User Service
+	@Bean
+	public UserDetailsService rlandUserDetailsService() {
+		
+		return new RlandUserDetailsService();
+	}
+//	여기서 Bean을 선언하면 RlandUserDetailsService를 @Service를 달면 안된다.
+//	다른사람이 만든 객체를 담을 땐 위와 같이 하면 된다
+```
+
+## 다시 메뉴 등록 요청을 보낼 때 username을 얻는 방법
+
+```java
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Principal principal) {
+		
+//		방법 5 커스텀 사용자 정보 얻기
+		RlandUserDetails user = (RlandUserDetails) authentication.getPrincipal();
+		System.out.println(user.getUsername());
+		
+		return "redirect:list";
+	}
+```
+
 
 참고 : [자바캔](https://javacan.tistory.com/entry/58)
