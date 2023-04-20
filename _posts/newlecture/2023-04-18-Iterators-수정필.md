@@ -32,7 +32,7 @@ public class App {
         // 한 스레드에서 값을 읽으면 다른 스레드는 하나 증가된 인덱스를 읽게 된다.
         // 데이터는 공유하는 것이 맞지만 인덱스는 공유해선 안 된다
 
-        // 인덱스를 각자 가져가게 하는 것이 iterator 
+        // 반복할 인덱스를 각자 가져가게 하는 것이 iterator 
 
         System.out.println(set.iterator().next()); // 1
         System.out.println(set.iterator().next()); // 1
