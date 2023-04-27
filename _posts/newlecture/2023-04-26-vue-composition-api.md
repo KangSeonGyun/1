@@ -371,6 +371,8 @@ onMounted(() => {
 </template>
 ```
 
+filter를 사용해 검색 기능을 추가했다 메뉴의 이름 m.name에 text 박스에 쓴 텍스트가 포함되어 있다면 필터링 된다.
+
 ```vue
 <script setup>
 import { computed, onMounted, reactive, watch, ref } from 'vue';
@@ -422,4 +424,119 @@ onMounted(() => {
         total : <span v-text="total"></span><br>
     </div>
 </template>
+```
+
+shallowRef 와 triggerRef
+
+```vue
+<script setup>
+import { computed, onMounted, reactive, watch, ref, shallowRef, triggerRef } from 'vue';
+
+let model = reactive({
+    newList: [],
+    list: []
+})
+
+let total = computed(() => model.list.map((m) => m.price).reduce((p, c) => p + c, 0));
+
+let query = ref("");
+
+let aa = shallowRef({name:'okay'});
+
+async function load() {
+    let res = await fetch("http://localhost:8080/menus");
+    let json = await res.json();
+    model.list = json.list;
+}
+
+function menuDelHandler(id) {
+    let idx = model.list.findIndex(m => m.id == id);
+    model.list.splice(idx, 1);
+}
+
+function inputHandler(){
+    triggerRef(aa);
+}
+
+watch(query, () => {
+    model.list = model.list.filter(m => m.name.includes(query.value));
+});
+
+onMounted(() => {
+    load();
+})
+</script>
+
+<template>
+    <div>
+        search : <input type="text" v-model="query">
+    </div>
+
+    <div>
+        <ul>
+            <li v-for="m in model.list">
+                <span v-text="m.name"></span><input type="button" value="del" @click="menuDelHandler(m.id)" />
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        total : <span v-text="total"></span><br>
+        {{ aa.name }}<input type="text" v-model="aa.name" @input="inputHandler">
+    </div>
+</template>
+```
+
+컴포넌트간 데이터 교환?
+
+과거방식
+
+아래는 NewMenu.vue 이다
+
+```vue
+<script>
+export default{
+    props:['list']
+}
+</script>
+```
+
+아래는 App.vue 이다
+
+```vue
+<template>
+	<Newlist :list="model.newList" />
+</template>
+```
+
+App.vue에서 model.newList를 NewMenu.vue의 data로 넘겼다
+
+현재방식
+
+Newmenu.vue 만 아래와 같이 바꾸면 된다
+
+```vue
+<script setup>
+    let props = defineProps({
+        list: []
+    });
+</script>
+```
+
+그 외에도 다음과 같이 값을 보내면
+
+```vue
+<Newlist :list="model.newList" title="추천메뉴" :aa="aa.name"/>
+```
+
+아래와 같이 받을 수 있다.
+
+```vue
+<script setup>
+    let props = defineProps({
+        list: [],
+        title: "",
+        aa: ""
+    });
+</script>
 ```
