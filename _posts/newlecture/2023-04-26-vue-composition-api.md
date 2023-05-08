@@ -540,3 +540,340 @@ Newmenu.vue 만 아래와 같이 바꾸면 된다
     });
 </script>
 ```
+
+## 모달 만들 때 배경 검정색
+
+```html
+<template>
+    <div class="screen">
+        <section>
+            <h1>title</h1>
+            <div>
+                <button>OK</button>
+                <button>Cancel</button>
+            </div>
+        </section>
+    </div>
+</template>
+```
+
+아래와 같이 배경을 주면 button도 투명도가 먹는다. button의 opacity를 1로 해도 투명도가 먹는다.
+
+```css
+.screen{
+    background-color: black;
+    opacity: 0.7;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+button{
+    opacity: 1;
+}
+```
+
+background-color: rgba 로 하면 버튼의 배경은 투명해지지 않는다
+
+```css
+.screen{
+    background-color: rgba(0, 0, 0, 0.8);
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+}
+```
+
+## 모달 띄우기
+
+### app.vue
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import Modal from './components/Modal.vue';
+
+let showModal = ref(false)
+
+function showHandler() {
+    showModal.value = true;
+}
+
+</script>
+
+<template>
+    <div>
+        <button @click="showHandler">show 모달</button>
+    </div>
+    <Modal title="공지사항" :show="showModal">
+        <div>
+            안녕하세요
+        </div>
+    </Modal>
+</template>
+```
+
+### modal.vue
+
+```vue
+<script setup>
+let props = defineProps({
+    title: "",
+    show: false
+})
+
+function okHandler() {
+    props.show = false;
+}
+</script>
+
+<template>
+    <div class="screen" :class="{ 'd-none': !show }">
+        <section>
+            <h1>{{ title }}</h1>
+            <div class="content">
+                <slot></slot>
+            </div>
+            <div class="commands">
+                <button @click="okHandler">OK</button>
+                <button>Cancel</button>
+            </div>
+        </section>
+    </div>
+</template>
+```
+
+okHandler()로는 props.show가 바뀌지 않는다.
+Set operation on key "show" failed: target is readonly.
+생각해보면 올바른 코드로 우리를 이끌고 있다
+modal이 아닌 app.vue에서 ok를 눌렀는지 cancel를 눌렀는지 알아야할 필요가있다
+
+emit을 사용하여 Modal.vue에서 App.vue의 @ok 이벤트를 발생시킬 수 있다.
+아래 예제는 ok 이벤트를 발생시키며 단순 텍스트로 "데이터"도 전달 했다
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import Modal from './components/Modal.vue';
+
+let showModal = ref(false)
+
+function showHandler() {
+    showModal.value = true;
+}
+
+function dlgHandler(a) {
+    console.log(a); // 콘솔에 "데이터"가 찍힌다
+    showModal.value = false;
+}
+</script>
+
+<template>
+    <div>
+        <button @click="showHandler">show 모달</button>
+    </div>
+    <Modal title="공지사항" :show="showModal" @ok="dlgHandler">
+        <div>
+            안녕하세요
+        </div>
+    </Modal>
+</template>
+```
+
+
+```vue
+<script setup>
+let props = defineProps({
+    title: "",
+    show: false
+})
+</script>
+
+<template>
+    <div class="screen" :class="{ 'd-none': !show }">
+        <section>
+            <h1>{{ title }}</h1>
+            <div class="content">
+                <slot></slot>
+            </div>
+            <div class="commands">
+                <button @click="$emit('ok', '데이터')">OK</button>
+                <button>Cancel</button>
+            </div>
+        </section>
+    </div>
+</template>
+
+<style scoped>
+.d-none {
+    display: none !important;
+}
+
+.screen {
+    background-color: rgba(0, 0, 0, 0.8);
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+
+    justify-content: center;
+}
+
+section {
+    background-color: white;
+    display: inline-block;
+
+    border-radius: .7em;
+}
+
+section>h1 {
+    font-size: 14px;
+    padding: 0px 10px;
+}
+
+section>.content {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 10px 20px;
+}
+
+section>.commands {
+    padding: 10px 10px;
+
+    display: flex;
+    justify-content: center;
+}
+</style>
+```
+
+## 모달 애니메이션 추가
+
+### App.vue
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import Modal from './components/Modal.vue';
+
+let showModal = ref(false)
+
+function showHandler() {
+    showModal.value = true;
+}
+
+function dlgHandler(a) {
+    console.log(a); // 콘솔에 "데이터"가 찍힌다
+    showModal.value = false;
+}
+</script>
+
+<template>
+    <div>
+        <button @click="showHandler">show 모달</button>
+    </div>
+    <Modal title="공지사항" :show="showModal" @ok="dlgHandler">
+        <div>
+            안녕하세요
+        </div>
+    </Modal>
+</template>
+```
+
+### Modal.vue
+
+```vue
+<script setup>
+let props = defineProps({
+    title: "",
+    show: false
+})
+</script>
+
+<template>
+    <div class="screen" :class="{ 'd-none': !show }">
+        <section :class="{ 'show-effect': show }">
+            <h1>{{ title }}</h1>
+            <div class="content">
+                <slot></slot>
+            </div>
+            <div class="commands">
+                <button @click="$emit('ok', '데이터')">OK</button>
+                <button>Cancel</button>
+            </div>
+        </section>
+    </div>
+</template>
+
+<style scoped>
+
+@keyframes show-effect {
+    from{
+        transform: translateY(-300px);
+    }
+
+    to{
+        transform: translateY(-200px);
+    }
+    
+}
+
+.d-none {
+    display: none !important;
+}
+
+.screen {
+    background-color: rgba(0, 0, 0, 0.8);
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+
+    justify-content: center;
+}
+
+section {
+    background-color: white;
+    display: inline-block;
+
+    border-radius: .7em;
+}
+
+.show-effect{
+    animation: show-effect 1s forwards;
+}
+
+section>h1 {
+    font-size: 14px;
+    padding: 0px 10px;
+}
+
+section>.content {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 10px 20px;
+}
+
+section>.commands {
+    padding: 10px 10px;
+
+    display: flex;
+    justify-content: center;
+}
+</style>
+```vue

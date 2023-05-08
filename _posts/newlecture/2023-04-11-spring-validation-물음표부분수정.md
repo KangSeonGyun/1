@@ -76,10 +76,10 @@ public class UesrController {
 	@PostMapping("login")
 	public String login(String uid, String pwd, String returnURL, HttpSession session) {
 
-		boolean isVaild = memberservice.isVaildMember(uid, pwd);
+		boolean vaild = memberservice.isValid(uid, pwd);
 
-		if (isVaild) {
-//			isVaild가 true라는 것은 로그인에 성공한 경우이다.
+		if (vaild) {
+//			vaild가 true라는 것은 로그인에 성공한 경우이다.
 		
 			session.setAttribute("username", uid);
 //			세션에 인증 받은 사용자의 아이디를 넣는다.
@@ -98,6 +98,30 @@ public class UesrController {
 ```
 
 setAttribute로 세션을 부여했다.
+
+```java
+@Service
+public class DefaultMemberService implements MemberService {
+
+    @Autowired
+    private MemberRepository repository;
+
+    @Override
+    public boolean isValid(String userName, String password) {
+    
+        Member member = repository.findByUserName(userName);
+
+        if (member == null)
+            return false;
+        else if (!BCrypt.checkpw(password, member.getPwd()))
+            return false;
+
+        return true;
+    }
+}
+```
+
+위 코드는 서비스 단에서 userName과 password를 이용해 내 서비스에 등록된 사용자인지 알아내는 과정이다
 
 ```html
 <h1 th:text="${param.error}"></h1>
