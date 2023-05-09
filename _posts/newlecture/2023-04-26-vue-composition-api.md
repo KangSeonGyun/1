@@ -876,4 +876,44 @@ section>.commands {
     justify-content: center;
 }
 </style>
+```
+
+## Vuejs Transition을 이용한 애니메이션
+
+Transition으로 효과가 나타나길 바라는 부분을 감싸고 v-if로 보였다 안보였다 할 때 애니메이션 효과를 줄 수 있다.
+
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+let showRcmdMenu = ref(false);
+
+function showHandler() {
+    showRcmdMenu.value = !showRcmdMenu.value;
+}
+</script>
+
+<template>
+	<button type="submit" @click.prevent="showHandler">보기</button>
+	
+    <Transition>
+        <div v-if="showRcmdMenu">
+            내용
+        </div>
+    </Transition>
+</template>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>
+```
+
+[공식문서](https://vuejs.org/guide/built-ins/transition.html)
