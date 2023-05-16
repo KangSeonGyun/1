@@ -917,3 +917,77 @@ function showHandler() {
 ```
 
 [공식문서](https://vuejs.org/guide/built-ins/transition.html)
+
+## 페이지 이동간 Transition
+
+Vue Router를 이용해야 한다.
+
+1
+
+```vue
+<script setup>
+import Header from './Header.vue';
+import Footer from './Footer.vue';
+import Aside from './Aside.vue';
+</script>
+
+<template>
+    <Header />
+    <Aside />
+
+    <router-view v-slot="{ Component }">
+        <transition name="fade">
+            <component :is="Component" />
+        </transition>
+    </router-view>
+
+    <Footer />
+</template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>
+```
+
+2
+
+```vue
+<script setup>
+import Header from './Header.vue';
+import Footer from './Footer.vue';
+import Aside from './Aside.vue';
+</script>
+
+<template>
+    <Header />
+    <Aside />
+
+    <Transition name="fade">
+        <router-view></router-view>
+    </Transition>
+
+    <Footer />
+</template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>
+```
+
+두 가지 방법 모두 가능하다
