@@ -1,14 +1,17 @@
 ---
 title: Vuejs Composition API vs Options API
-tags: 
+tags: vue
 ---
 
-Composition API vs Options API 둘 중에 하나를 선택해서 사용해야 한다.
+## Composition API vs Options API
+
+Composition API vs Options API 를 비교해보려고 한다.
 
 Composition API은 최신에 나왔으며 Options API보다 더 편하게 사용가능하다
 
+### 중첩의 제거
 
-option api에서는 다음과 같이 중첩이 생긴다 
+Option api에서는 다음과 같이 중첩이 생긴다. export default안에 data안에 return이 있다.
 
 ```vue
 <script>
@@ -26,7 +29,8 @@ option api에서는 다음과 같이 중첩이 생긴다
 </template>
 ```
 
-Composition API는 다음과 같이 사용할 수 있다
+Composition API는 다음과 같이 사용할 수 있다.   
+export default의 객체로 내보내지 않아도 되며, 이를통해 중접이 사라진 걸 볼 수 있다.
 
 ```vue
 <script setup>
@@ -38,10 +42,10 @@ Composition API는 다음과 같이 사용할 수 있다
 </template>
 ```
 
-a는 2way가 지원되며 input에 값을 넣을 때 마다 a가 바뀐다
-a는 리액티브 하다
-b는 1way이며 input에 값을 넣을 때 b가 바뀌지 않는다
-b는 리액티브 하지 않다
+### ref, reactive
+
+a는 2way가 지원되며 input에 값을 넣을 때 마다 a가 바뀐다. a는 리액티브 하다.
+b는 1way이며 input에 값을 넣을 때 b가 바뀌지 않는다. b는 리액티브 하지 않다.
 
 ```vue
 <script>
@@ -69,8 +73,7 @@ b는 리액티브 하지 않다
 </template>
 ```
 
-b도 리엑티브하게 바꾸려면 Vuejs 공식 홈페이지 API의 Reactivity: Core를 확인해 보자
-아래와 같이 수정하면 b도 리액티브 해진다.
+b도 리엑티브하게 바꾸려면 Vuejs 공식 홈페이지 API의 Reactivity: Core를 확인해 보자. 아래와 같이 수정하면 b도 리액티브 해진다.
 
 ```vue
 <script setup>
@@ -80,8 +83,7 @@ b도 리엑티브하게 바꾸려면 Vuejs 공식 홈페이지 API의 Reactivity
 </script>
 ```
 
-아래와 같이 menu를 만들고 ref로 감싸면 menu는 리액티브 하다
-하지만 이게 정상일까?
+아래와 같이 menu를 만들고 ref로 감싸면 menu는 리액티브 하다. 하지만 이렇게 하는게 맞을까?
 
 ```vue
 <script setup>
@@ -103,8 +105,7 @@ b도 리엑티브하게 바꾸려면 Vuejs 공식 홈페이지 API의 Reactivity
 </template>
 ```
 
-위와 같은 결과를 보이지만
-객체를 리엑티브하게 바꾸려면 공식 API 설명에 따라 reactive()를 써주는게 바람직하다
+같은 결과를 보이지만 **객체**를 리엑티브하게 바꾸려면 공식 API 설명에 따라 reactive()를 써주는게 바람직하다
 
 ```vue
 <script setup>
@@ -126,109 +127,21 @@ b도 리엑티브하게 바꾸려면 Vuejs 공식 홈페이지 API의 Reactivity
 </template>
 ```
 
-Options API는 components에 Header를 담아야 했다
-
-```vue
-<script>
-    import Header from './components/Header.vue';
-
-    export default {
-        components:{
-            Header
-        }
-    }
-</script>
-
-<template>
-    <Header />
-</template>
-```
-
-Composition API는 다음과 같다
+### reactive 사용시 주의점
 
 ```vue
 <script setup>
-import Header from './components/Header.vue';
-</script>
+import { reactive } from 'vue';
 
-<template>
-    <Header />
-</template>
-```
-
-생명주기도 다르게 작성할 수 있다
-Options API
-
-```vue
-<script>
-    export default {
-        mounted(){
-            console.log("mounted o")
-        }
-    }
+let list = reactive([]);
 </script>
 ```
 
-Composition API는 export default의 객체로 내보내지 않아도 되며, 이를통해 중접이 사라진 걸 볼 수 있다.
+위와같이 list 선언해두고 fetch 끝날 때 list = json.list 을 하면 list에 값이 담기긴 하나 화면에 안 뜬다. reactive가 대체되기 때문이다.   
+list = reactive(json.list); 도 안 됐다.
 
-```vue
-<script setup>
-import { onMounted } from 'vue';
-
-onMounted(() => {
-    console.log("mounted c")
-});
-</script>
-```
-
-methods 차이
-Options API
-
-```vue
-<script>
-    export default {
-        methods:{
-            clickHandler(){
-                console.log("clicked");
-            }
-        }
-    }
-</script>
-
-<template>
-    <button @click="clickHandler">클릭</button>
-</template>
-```
-
-Composition API
-
-```vue
-<script setup>
-function clickHandler(){
-    console.log("clicked");
-}
-</script>
-
-<template>
-    <button @click="clickHandler">클릭</button>
-</template>
-```
-
-아래와 같이 람다를 써도 되긴하나 바람직하지 않다.
-이유는 lambda 에서 확인
-
-```vue
-<script setup>
-const clickHandler2 = () => {
-    console.log("clicked");
-}
-</script>
-```
-
-let list = reactive([]);를 선언해두고 fetch 끝날 때 
-list = json.list 로 하면 list에 값이 담기긴 하나 화면에 안 뜬다
-reactive가 대체되기 때문
-list = reactive(json.list); 도 안 된다.
+아래 예제에선 model에 반응형 객체를 만들고 그 안에 list를 만들었다.   
+이렇게 하면 fetch문으로 list를 받아왔을 때 reactive하게 View(Template)에 반영된다.
 
 ```vue
 <script setup>
@@ -261,9 +174,116 @@ onMounted(() =>{
 </template>
 ```
 
-아래 예제는 b 값을 입력받고 b값에 2를 더한 total을 출력한다
-b.value를 왜쓰지?
-computed가 정확히 뭐지?
+### components
+
+Options API는 components에 Header를 담아야 했다
+
+```vue
+<script>
+    import Header from './components/Header.vue';
+
+    export default {
+        components:{
+            Header
+        }
+    }
+</script>
+
+<template>
+    <Header />
+</template>
+```
+
+Composition API는 다음과 같다
+
+```vue
+<script setup>
+import Header from './components/Header.vue';
+</script>
+
+<template>
+    <Header />
+</template>
+```
+
+### Lifecycle
+
+Options API
+
+```vue
+<script>
+    export default {
+        mounted(){
+            console.log("mounted o")
+        }
+    }
+</script>
+```
+
+Composition API
+
+```vue
+<script setup>
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    console.log("mounted c")
+});
+</script>
+```
+
+### methods
+
+Options API
+
+```vue
+<script>
+    export default {
+        methods:{
+            clickHandler(){
+                console.log("clicked");
+            }
+        }
+    }
+</script>
+
+<template>
+    <button @click="clickHandler">클릭</button>
+</template>
+```
+
+Composition API
+
+```vue
+<script setup>
+function clickHandler(){
+    console.log("clicked");
+}
+</script>
+
+<template>
+    <button @click="clickHandler">클릭</button>
+</template>
+```
+
+아래와 같이 람다를 써도 되긴하나 바람직하지 않다. 이유는 lambda 에서 확인
+
+```vue
+<script setup>
+const clickHandler2 = () => {
+    console.log("clicked");
+}
+</script>
+```
+
+## computed
+
+computed 속성은 반응형 데이터를 기반으로 계산된 값을 생성할 수 있다.   
+아래 예제에서 total은 의존하는 데이터(b)가 변경될 때마다 자동으로 다시 계산하고 업데이트한다.
+
+total의 기능 : reactive한 b값에 2를 더한 total을 출력한다.   
+
+ref로 생성된 변수는 내부적으로 객체로 래핑되어 .value 속성을 통해 실제 값을 가져올 수 있다.   
 v-model.number는 문자열 더하기가 되서 썼다.
 
 ```vue
@@ -283,9 +303,10 @@ let total = computed(() => b.value + 2);
 </template>
 ```
 
-list를 출력하는 예제와 total을 호출하는 예제를 합쳐 모든 메뉴의 price를 계산하는 방법
-map을 왜 만들고 어떻게 만든거지?
-reduce 란?
+list를 받아와 View에 보여주며 모든 list의 price total을 계산하는 예제   
+
+[map](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map) 메소드는 배열의 각 요소에 대해 주어진 함수를 호출하고, 해당 함수의 반환 값을 가지고 새로운 배열을 생성합니다.   
+[reduce](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) 메소드는 배열의 요소를 하나씩 순회하며 주어진 함수를 호출하여 값을 축적하는 작업을 수행합니다.   
 
 ```vue
 <script setup>
@@ -325,7 +346,11 @@ onMounted(() => {
 </template>
 ```
 
-이제 del 버튼을 누르면 리스트를 삭제할 수 있다
+추가 예제
+
+list 옆에있는 del 버튼을 누르면 해당 아이템만 삭제하는 기능.
+
+[findIndex](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex) 메소드는 배열에서 주어진 조건을 만족하는 첫 번째 요소의 인덱스를 반환하는 배열 메소드다.
 
 ```vue
 <script setup>
@@ -343,6 +368,8 @@ async function load() {
     let json = await res.json();
     model.list = json.list;
 }
+
+// --- Del 기능 ---
 
 function menuDelHandler(id) {
     let idx = model.list.findIndex(m => m.id == id);
@@ -371,7 +398,14 @@ onMounted(() => {
 </template>
 ```
 
-filter를 사용해 검색 기능을 추가했다 메뉴의 이름 m.name에 text 박스에 쓴 텍스트가 포함되어 있다면 필터링 된다.
+추가 예제 2 (watch 사용)
+
+computed는 계산된 값이 같으면 동작하지 않지만, watch는 그냥 함수다 리액티브한 데이터를 보고있다가 바뀌면 실행된다.
+
+filter를 구현해 검색 기능을 추가했다. 메뉴의 이름 m.name에 text 박스에 쓴 텍스트가 포함되어 있다면 필터링 된다.
+
+[filter](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) 메소드는 배열에서 주어진 조건을 만족하는 모든 요소로 구성된 새로운 배열을 생성하는 배열 메소드입니다.   
+[includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes) 메소드는 배열이 특정 요소를 포함하는지 여부를 확인하는 배열 메소드입니다. 주어진 값이 배열에 포함되어 있는 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
 
 ```vue
 <script setup>
@@ -397,10 +431,11 @@ function menuDelHandler(id) {
     model.list.splice(idx, 1);
 }
 
+// --- filter 기능 ---
+
 watch(query, () => {
     model.list = model.list.filter(m => m.name.includes(query.value));
 });
-// watch는 그냥 함수다 리액티브한 데이터를 보고있다가 바뀌면 실행
 
 onMounted(() => {
     load();
@@ -426,7 +461,14 @@ onMounted(() => {
 </template>
 ```
 
-shallowRef 와 triggerRef
+## shallowRef 와 triggerRef
+
+shallowRef와 triggerRef는 Vue 3 Composition API에서 제공되는 리액티브(reactive) 객체를 다루기 위한 함수
+
+shallowRef 함수는 단일 값 또는 객체를 리액티브하게 감싸는 역할을 한다.   
+일반적인 ref와 달리, shallowRef는 객체의 프로퍼티까지는 리액티브로 만들지 않는다. 즉, 객체 내부의 변경은 리액티브로 추적되지 않는다.
+
+
 
 ```vue
 <script setup>
@@ -440,6 +482,8 @@ let model = reactive({
 let total = computed(() => model.list.map((m) => m.price).reduce((p, c) => p + c, 0));
 
 let query = ref("");
+
+// --- shallowRef ---
 
 let aa = shallowRef({name:'okay'});
 

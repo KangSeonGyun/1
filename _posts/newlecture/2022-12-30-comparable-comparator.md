@@ -15,7 +15,8 @@ Program.java
 // Comparable과 Comparator은 모두 인터페이스(interface) / 객체를 비교할 수 있도록 만든다
 // Comparable은 compareTo(T o) / Comparator는 compare(T o1, T o2)을 반드시 구현해야 한다
 
-// compareTo는 파라미터가 한 개 / compare은 파라미터가 두 개인 이유 / 비교 대상이 다르다
+// compareTo는 파라미터가 한 개 / compare은 파라미터가 두 개인 이유?
+// 비교 대상이 다르다
 // Comparable은 자기 자신과 매개변수 객체를 비교 / Comparator는 두 매개변수 객체를 비교
 
 public class Program {

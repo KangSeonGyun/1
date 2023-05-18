@@ -1,5 +1,5 @@
 ---
-title: Spring Security Thymeleaf
+title: Thymeleaf에서의 Spring Security
 tags: spring thymeleaf
 ---
 
@@ -30,9 +30,8 @@ Html(view)에 위와 같이 xml namespace를 추가한다.
 
 로그인 여부에 따라 로그인, 로그아웃을 교차로 보여준다.
 
+[https://docs.spring.io/spring-security/reference/servlet/authorization/expression-based.html](https://docs.spring.io/spring-security/reference/servlet/authorization/expression-based.html)
 
-https://docs.spring.io/spring-security/reference/servlet/authorization/expression-based.html
-
-https://www.baeldung.com/spring-security-thymeleaf
+[https://www.baeldung.com/spring-security-thymeleaf](https://www.baeldung.com/spring-security-thymeleaf)
 
 참고 : [자바캔](https://javacan.tistory.com/entry/58)

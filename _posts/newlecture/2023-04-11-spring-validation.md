@@ -49,16 +49,24 @@ if(session.getAttribute("isAuth")==null)
 2) 로그인 한 계정의 권한이 admin인지 확인해야 한다.
 
 ```java
-// ???
+if (session.getAttribute("isAuth") == null) {
+    return "redirect:/user/login";
+} else {
+    // 권한 확인 로직 추가
+    String userRole = (String) session.getAttribute("userRole");
+    if (userRole.equals("admin")) {
+        // 권한에 따른 처리
+        // ...
+    } else {
+        // 권한이 없는 경우에 대한 처리
+        // ...
+    }
+}
 ```
 
-
-## 인증
-???
+## 세션 부여
 
 다음 예제는 [이전글](https://ksg0000.github.io/2023/04/10/spring-login.html)과 이어진다.
-
-## 세션 부여
 
 ```java
 @Controller
@@ -184,4 +192,4 @@ session에서 username을 가져오며 username이 null이 아닐 경우(세션 
 
 하지만 이렇게 구현하면 모든 returnURL이 필요한 redirect요청에 ?returnURL=/admin/index를 붙여줘야 한다.   
 
-returnURL은 같은 내용이 단순 반복이므로 다음글에서 Filter를 이용해 집중화를 할 것이다. ?? 수정해라
+returnURL은 같은 내용이 단순 반복이므로 다음글에서 Filter를 이용해 집중화, 공통화가 필요하다
