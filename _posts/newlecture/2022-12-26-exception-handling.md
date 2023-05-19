@@ -3,18 +3,18 @@ title: Exception Handling
 tags: java
 ---
 
+예외란 오류중에 하나다.   
+예외는 자바가 갖고있는 것이 아닌 라이브러리가 예외를 정의하고 만들어 뒀다.
+
+오류 3가지   
+ 구문오류(치명적이지 않음) / 문법   
+ 논리오류(치명적임) / 학생 10명의 평균 키를 알기 위해 10명의 키를 다 더한 값에 11을 나눈 경우   
+ 예외(누군가만, 어떤 컴퓨터만, 어떤 상황에서만 예외적으로 발생하는 오류) / 인터넷이 끊긴 경우, 물리적인 장치문제, 입력 값 문제
+
 Calculator.java
 -------------
 
 ```java
-
-// 예외란 오류중에 하나다
-// 예외는 자바가 갖고있는 것이 아닌 라이브러리가 예외를 정의하고 만들어 뒀다
-
-// 오류
-//	구문오류(치명적이지 않음) / 문법
-//	논리오류(치명적임) / 학생 10명의 평균 키를 알기 위해 10명의 키를 다 더한 값에 11을 나눈 경우
-//	예외(누군가만, 어떤 컴퓨터만, 어떤 상황에서만 예외적으로 발생하는 오류) / 인터넷이 끊긴 경우, 물리적인 장치문제, 입력 값 문제
 
 //	성적관리 프로그램이 파일 입, 출력을 이용한다면 디스크에 직접 접근하는 것이 아닌 Disk Access API를 통해 접근한다
 //	Disk Access API엔 권한, 파일존재여부, 파일용량을 확인할 수 있으나 예외가 발생할 수 있다
@@ -226,4 +226,72 @@ public class 천을_넘는_예외2 extends RuntimeException {
 
 }
 
+```
+
+## 자바 8.0 부터 추가된 try-with-resources
+
+try-with-resources가 없을 때의 코드
+
+```java
+public class Program {
+    public static void main(String[] args) {
+
+        FileOutputStream fos = null;
+        PrintStream out = null;
+        try {
+            fos = new FileOutputStream("res/data.txt");
+            out = new PrintStream(fos);
+
+            out.println("Hello");
+
+            out.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+                fos.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+}
+```
+
+try-with-resources
+
+close가 추가된 try문이다.
+예외가 발생하지 않아도 close한다.
+
+```java
+public class Program2 {
+    public static void main(String[] args) {
+
+        try (
+                FileOutputStream fos = new FileOutputStream("res/data.txt");
+                PrintStream out = new PrintStream(fos);
+        ) {
+
+            out.println("Hello");
+            
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+}
 ```

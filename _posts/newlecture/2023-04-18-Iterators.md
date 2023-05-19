@@ -54,26 +54,11 @@ iterator를 사용하면 다음과 같이 인덱스를 공유하지 않는다.
         System.out.println(set.iterator().next()); // 1
 ```
 
-Iterator를 활용해서 나온 foreach
+내부적으로 반복자(iterator)를 사용하는 foreach
 
 ```java
         set.forEach((v) ->{
             System.out.println(v);
-        });
-        // 1 3 5 7 8
-```
-
-함수적 인터페이스(Functional Interface)입니다. 함수적 인터페이스는 단일 추상 메서드를 가진 인터페이스
-
-set이라는 컬렉션의 각 요소를 순회하면서 Consumer<Integer> 인터페이스를 구현한 익명 클래스를 생성하고, 해당 익명 클래스의 accept 메서드를 호출하여 요소를 처리하는 기능을 수행합니다.
-
-forEach() 메서드는 내부적으로 Set의 요소를 하나씩 가져와서 Consumer 객체의 accept() 메서드를 호출하며, 요소를 accept() 메서드의 매개변수로 전달합니다.
-
-```java
-        set.forEach(new Consumer<Integer>() {
-            public void accept(Integer value){
-                System.out.println(value);
-            }
         });
         // 1 3 5 7 8
 ```
