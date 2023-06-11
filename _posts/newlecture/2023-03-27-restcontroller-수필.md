@@ -5,7 +5,7 @@ tags: java
 
 rest는 html이 아닌 javaspript가 이 값들을 이용한다.
 
-처음 page를 블러올 땐 @Controller를 이용하고 이후 값만 바꿀 땐 @RestController를 이용한다
+처음 page를 블러온 이후 값만 바꿀 땐 @RestController를 이용한다.
 
 ```java
 	@GetMapping("/menus/{id}")

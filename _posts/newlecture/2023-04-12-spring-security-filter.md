@@ -109,7 +109,7 @@ HttpServletRequest는 HTTP 요청에 대한 다양한 정보와 기능을 제공
 
 Filter에 대한 내용은 여기까지만 하고 라이브러리를 이용해 보자... 나중에 공부해보자.
 
-## Spring Security 라이브러리 이용
+## Spring Security 라이브러리
 
 Filter는 xml(구 방식)로도 구현할 수 있지만 해당 예제는 Java로 구현했다.
 
@@ -124,6 +124,7 @@ Filter는 xml(구 방식)로도 구현할 수 있지만 해당 예제는 Java로
 	<scope>test</scope>
 </dependency>
 ```
+
 Spring Starters를 통해 간단히 추가할 수 있으며, pom.xml에 위와 같은 dependency가 추가 된다.
 
 ```java
@@ -138,8 +139,6 @@ RlandSecurityConfig 클래스 생성 후 Bean 담기
 ```java
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//		HttpSecurity는 import할 때 패키지명을 보면 알 수 있듯이 보안 설정을 위한 Builder다
-//		Filter가 로그인이 안 되었으면 로그인 페이지로 보내며 권한도 확인해준다
 
 		http
 			.authorizeHttpRequests()
@@ -149,25 +148,31 @@ RlandSecurityConfig 클래스 생성 후 Bean 담기
 				
 		return http.build();
 	}
-				
-//		hasAnyAuthority()를 쓸 때 파라미터가 꼭 ROLE_로 시작해야 하는 규칙이 있다. 예) ROLE_ADMIN
-//		hasAnyRole()은 과거 ROLE_을 꼭 붙여야하는 규칙을 생략해도 된다. 예) ADMIN
-
-//		/admin/**은 ADMIN만
-//		/member/** ADMIN과 MEMBER만
-//		나머지는 전부 허용
 ```
 
-/admin 혹은 /member에 들어가면 403 error, 세션 부여됨
+HttpSecurity는 import할 때 패키지명을 보면 알 수 있듯이 보안 설정을 위한 Builder다.
 
-//	빌더란?
-//	Lombok에서도 빌더가 있다 all argu 필요
-//	setter가 아닌 오버로드 생성자를 통해 만듦
+hasAnyAuthority()를 쓸 때 파라미터가 꼭 ROLE_로 시작해야 하는 규칙이 있다. 예) ROLE_ADMIN   
+hasAnyRole()은 과거 ROLE_을 꼭 붙여야하는 규칙을 생략해도 된다. 예) ADMIN
+
+url이 admin으로 시작한다면 ADMIN 권한을 가진 유저만 접근할 수있다.   
+url이 member로 시작한다면 ADMIN 혹은 MEMBER 권한을 가진 유저만 접근할 수있다.   
+admin과 member로 시작하지 않는 나머지는 url은 모든 유저 허용
+
+주소창에서 /admin 혹은 /member에 들어가면 403 error, 세션 부여됨
+
+## 사용자 데이터 서비스
+
+위에서는 접근권한만 설정해줬지 사용자 정보를 가져오진 않았다.
+
+사용자 데이터 서비스를 구현하는 방법은 인메모리 서비스, JDBC 서비스, LDAP 서비스, Custom User 서비스 등.. 이 있다.
+
+### 인메모리 서비스
+
+우선 인메모리 서비스다. 쉽게 생각하면 내가 정의한 사용자 리스트이다.   
+아래와 같이 newlec, dragon 등 사용자를 내가 만들어 주면 된다.
 
 ```java
-//	사용자 데이터 서비스
-//	1. 인메모리 서비스 - 내가 정의한 사용자 리스트?
-//	3. LDAP 서비스 - 총무부만 따로 사용?
 	@Bean
 	public UserDetailsService userDetailsService() {
 		UserDetails newlec = User
@@ -188,188 +193,10 @@ RlandSecurityConfig 클래스 생성 후 Bean 담기
 	}
 ```
 
-이래도 403에러
+### JDBC 서비스
 
-```java
-		http
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
-			.and()
-				.formLogin();
-```
-
-.and() .formLogin(); 이걸 해줘야 로그인 화면이 뜬다 사용자가 로그인 폼을 만들지 않으면 기본 폼을 제공한다.
-이래도 newlec 111을 입력하면 500에러
-There is no PasswordEncoder mapped for the id "null"
-PasswordEncoder가 필요하다
-
-//	양방향, 단방향 암호화 ?
-//	원문을 알면 hash값을 알아 낼 수 있짐나 hash값으로 원문을 만들어 낼 순 없다.
-
-```java
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		
-		return new BCryptPasswordEncoder();	
-	}
-```
-
-예제에선 BCryptPasswordEncoder 사용
-이래도 newlec 111로 로그인이 안된다.
-왜냐하면 111을 암호화하면 $2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O
-password를 위와 같이 수정
-
-엄청큰 파일을 암호화해도 같은 길이의 암호가 만들어진다. 단순 식별자 이기 때문
-
-```java
-		UserDetails newlec = User
-				.builder()
-				.username("newlec")
-				.password("$2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O")
-				.roles("ADMIN", "MEMBER")
-				.build();
-```
-
-newlec의 password를 암호화된 문자열로 수정
-newlec 111을 입력하면 로그인 성공
-왜냐하면 사용자가 입력한 111을 입력하면 $2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O로 암호화 되며 password가 일치한 것이다.
-
-```java
-		UserDetails newlec = User
-				.builder()
-				.username("newlec")
-				.password(passwordEncoder().encode("111"))
-				.roles("ADMIN", "MEMBER")
-				.build();
-```
-
-하지만 암호화된 문자열을 미리 알 수 없으므로 위와 같이 수정
-이로써 사용자가 뭘 입력하는 지는 궁금하지않고 암호화된 문자열이 같으면 비밀번호가 일치한 것이다.
-
-```java
-		http
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
-			.and()
-				.formLogin()
-				.loginPage("/user/login");
-```
-
-스프링이 기본으로 제공해주는 로그인 페이지가 아닌 내가 만든 로그인 페이지 사용
-이러고 newlec 111 로그인 시도하면 403에러
-
-```java
-		http
-			.cors()
-			.disable()
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
-			.and()
-				.formLogin()
-				.loginPage("/user/login");
-```
-
-CORS 공격에 대한 대비가 없다?
-same Origin인지 확인할 수 있는 Key가 없다. 혹은 cors 끄기
-하지만 이래도 newlec 111 로그인 시도하면 403에러
-왜냐하면 /user/login 로그인하면 /user/login로 Post요청이 간다.
-스프링은 /login으로 post요청을 보낼 것 이지만 내가만든 post요청을 쓰려면 알려줘야 한다???? 스프링이 로그인 Post로직을 구현하고 있기 때문
-
-```java
-		http
-			.cors()
-			.disable()
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
-			.and()
-				.formLogin()
-				.loginPage("/user/login")
-				.loginProcessingUrl("/user/login");
-```
-
-loginProcessingUrl에 매핑된 /user/login으로 Post요청이오면 스프링이 구현하고 있는 로그인 로직을 사용한다는 의미다.
-따라서 form action속성과 맞춰 주기만 하면 막 써도 괜찮다.
-기존에 내가 만들어 놓은 PostMapping /user/login이 있다면 무시된다.
-
-이래도 403에러 CSRF설정이 필요하다. 버전에 따라 cors만 설정해도 되는 경우가 있다
-//	cors csrf 알아보자
-
-```java
-		http
-			.cors().and()
-			.csrf().disable()
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
-			.and()
-				.formLogin()
-				.loginPage("/user/login")
-				.loginProcessingUrl("/user/login");
-```
-
-만약 html에서 form태그 input의 name 속성이 스프링이 정한 username, password가 아니라 사용자가 임의로 정한 uid, pwd일 경우 로그인 되지 않는다
-
-```java
-		http
-			.cors().and()
-			.csrf().disable()
-			.authorizeHttpRequests()
-				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-				.anyRequest().permitAll()
-			.and()
-				.formLogin()
-				.loginPage("/user/login")
-				.loginProcessingUrl("/user/login")
-				.defaultSuccessUrl("/admin/index");
-```
-
-html을 고쳤다면 로그인이 된다 defaultSuccessUrl는 로그인 성공시 이동할 url이다.
-
-
-## Logout
-
-```java
-	@RequestMapping("logout")
-	public String logout(HttpSession session) {
-		
-		session.invalidate();
-		
-		return "redirect:/index";
-	}
-```
-이 요청도 무시된다. Spring이 구현.
-
-```java
-		http
-			.cors()
-			.and()
-				.csrf().disable()
-				.authorizeHttpRequests()
-					.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-					.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
-					.anyRequest().permitAll()
-			.and()
-				.formLogin()
-					.loginPage("/user/login")
-					.loginProcessingUrl("/user/login")
-					.defaultSuccessUrl("/admin/index")
-			.and()
-				.logout()
-					.logoutUrl("/user/logout")
-					.logoutSuccessUrl("/index");
-```
-
-## 사용자 데이터 서비스
+application.properties에 DB정보(datasource)가 정의되어 있다면 Bean에 담겨있다.   
+즉 Autowired로 간편하게 사용할 수 있다.
 
 ```java
 @Autowired
@@ -377,111 +204,46 @@ private DataSource dataSource;
 ```
 
 ```java
-//	2. JDBC 서비스
 	@Bean
 	public UserDetailsService jdbcUserDetailsService() {
 		
 		JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-//		application.properties에 DB정보(datasource)가 정의되어 콩자루에 담겨있다.
 		
 		manager.setUsersByUsernameQuery("select username, pwd password, 1 enabled from member where username=?");
-//		로그인 시도한 사람의 계정, 패스워드, enabled(활성화, 비활성화 여부)만 가져와야한다.
-//		우리 DB Table은 활성화, 비활성화 여부를 저장하지 않아 고정값 1로 했다.
+//		로그인 시도한 사람의 계정, 패스워드, enabled(계정 활성화, 비활성화 여부)만 가져와야한다.
+//		만약 DB Table에서 활성화, 비활성화 여부를 저장하지 않는다면 고정값 1로 할 수 있다.
 		
 		manager.setAuthoritiesByUsernameQuery("SELECT username, 'ROLE_ADMIN' authority from member where username=?");
 //		member Table에 권한 정보가 없다고 가정하고 고정값 ROLE_ADMIN를 넣었다.
-		
 
 		return manager;
 	}
 ```
 
-## 메뉴 등록 요청을 보낼 때 username을 얻는 방법
+### Custom User Service
 
-세션을 이용하는 것은 올바르지 않다?
+만약 로그인 한 사람의 계정, 패스워드 뿐만아니라 이메일 등 다른 정보도 가져와야 할 필요가 있다면 Custom User Service를 만들어야 한다.   
+사용자 정보를 담을 그릇(UserDetails)와 사용자 정보를 담는 서비스(UserDetailsService)를 구현하면 된다.   
 
-1
-
-```java
-	@PostMapping("reg")
-	public String reg(String title) {
-//		1.
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String currentPrincipalName = authentication.getName();
-		System.out.println(currentPrincipalName);
-		
-		return "redirect:list";
-	}
-```
-
-2
+바로 다음에서도 언급할 것이지만 미리 말하면 여기서 @Bean을 선언하면 RlandUserDetailsService에서 @Service를 달면 안된다. 같은 Bean을 두 번 담는 결과가 된다.
 
 ```java
-	@PostMapping("reg")
-	public String reg(
-			String title,
-			Authentication authentication) {
-//		2.
-		String userName = authentication.getName();
+	@Bean
+	public UserDetailsService rlandUserDetailsService() {
 		
-		System.out.println(authentication.getPrincipal());
-		System.out.println(userName);
-		
-		return "redirect:list";
-	}
-```
-
-3
-
-```java
-	@PostMapping("reg")
-	public String reg(
-			String title,
-			Authentication authentication) {
-		
-		UserDetails user = (UserDetails) authentication.getPrincipal();
-//		getPrincipal() 이건 유저 정보(UserDetails)를 준다. username password(보호됨), enabled, 권한 등을 알 수 있다
-//		형 변환만 해주면 된다.
-
-		System.out.println(user.getUsername());
-		
-		System.out.println(user.getPassword());
-//		이건 null이 뜬다
-		
-		return "redirect:list";
-	}
-```
-
-4
-
-```java
-
-	@PostMapping("reg")
-	public String reg(
-			String title,
-			Principal principal) {
-		
-		System.out.println(principal.getName());
-		
-		return "redirect:list";
+		return new RlandUserDetailsService();
 	}
 ```
 
 ## 알랜드 만의 UserDetails 만들기
 
-```java
-public class RlandUserDetails extends User implements UserDetails {
-
-}
-```
-
-User를 상속받아도 된다
+우선 그릇부터 만들 것이다. UserDetails를 구현하는 RlandUserDetails를 구현할 것이다.   
+이 방법의 장점은 필요한 사용자 정보를 내가 원하는 만큼 가져올 수 있다는 것.
 
 ```java
 @Data
 @ToString
 public class RlandUserDetails implements UserDetails {
-//	Rland만의 UserDetails 그릇
 
 	private Long id;
 	private String email;
@@ -534,6 +296,18 @@ public class RlandUserDetails implements UserDetails {
 }
 ```
 
+다음과 같이 User를 상속받아도 된다
+
+```java
+public class RlandUserDetails extends User implements UserDetails {
+
+}
+```
+
+## 알랜드 만의 UserDetailsService 만들기
+
+위에서 언급했듯이 여기서 @Service를 하면 같은 Bean을 두 번 담았다는 에러가 난다.
+
 ```java
 //@Service
 public class RlandUserDetailsService implements UserDetailsService {
@@ -541,14 +315,15 @@ public class RlandUserDetailsService implements UserDetailsService {
 	@Autowired
 	private MemberRepository repository;
 	
-	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-//		RlandUserDetails 그릇에 담을 데이터 준비
 		Member member = repository.findByUesrname(username);
+//		DB에서 username으로 회원 정보를 가져온다.
+		
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//		임시로 권한 리스트엔 ROLE_ADMIN 고정 값을 넣었다.
 		
 //		데이터가 준비 되었으면 이제 RlandUserDetails 그릇 객체를 만들어서 데이터 반환해주면 끝
 		RlandUserDetails user = new RlandUserDetails();
@@ -564,34 +339,277 @@ public class RlandUserDetailsService implements UserDetailsService {
 }
 ```
 
-## 다시 사용자 데이터 서비스
+## Spring Security 사용 예제
+
+가장 간단한 인메모리 서비스에 이어지는 예제이다.   
+인메모리 서비스를 이용해 단순 사용자만 만들면 403에러가 난다.   
+.and() .formLogin(); 을 해줘야 로그인 화면이 뜬다. 사용자가 로그인 폼을 만들지 않으면 기본 폼을 제공한다.
 
 ```java
-//	3. Custom User Service
-	@Bean
-	public UserDetailsService rlandUserDetailsService() {
-		
-		return new RlandUserDetailsService();
-	}
-//	여기서 Bean을 선언하면 RlandUserDetailsService를 @Service를 달면 안된다.
-//	다른사람이 만든 객체를 담을 땐 위와 같이 하면 된다
+		http
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin();
 ```
 
-## 다시 메뉴 등록 요청을 보낼 때 username을 얻는 방법
+이래도 ID:newlec PW:111을 입력하면 500에러가 난다. There is no PasswordEncoder mapped for the id "null"   
+
+PasswordEncoder가 필요하다. PasswordEncoder는 필수이다. 나는 BCryptPasswordEncoder 사용했다.   
+원문을 알면 hash값을 알아 낼 수 있지만 hash값으로 원문을 만들어 낼 순 없다.
+
+```java
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		
+		return new BCryptPasswordEncoder();	
+	}
+```
+
+이래도 ID:newlec PW:111로 로그인이 안된다.   
+왜냐하면 111을 암호화했을 때 나온 $2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O을 newlec의 password로 수정해야 한다.   
+
+해쉬값은 다를 수 있다.   
+엄청큰 파일을 암호화해도 같은 길이의 암호가 만들어진다. 단순 식별자 이기 때문
+
+```java
+		UserDetails newlec = User
+				.builder()
+				.username("newlec")
+				.password("$2a$10$H.HXCEd59CmUnp9luiKHwestJxuSIGRsJZNzCWfTfpJPgk6VGLm3O")
+				.roles("ADMIN", "MEMBER")
+				.build();
+```
+
+이젠 ID:newlec PW:111로 로그인을 입력하면 로그인이 된다.   
+왜냐하면 사용자가 입력한 111을 입력하면 암호화 되며 password가 일치한 것이다.   
+하지만 암호화된 문자열을 미리 알 수 없으므로 아래와 같이 수정한다.   
+이로써 사용자가 뭘 입력하는 지는 궁금하지않고 암호화된 문자열이 같으면 비밀번호가 일치한 것이다.
+
+```java
+		UserDetails newlec = User
+				.builder()
+				.username("newlec")
+				.password(passwordEncoder().encode("111"))
+				.roles("ADMIN", "MEMBER")
+				.build();
+```
+
+이제 스프링이 기본으로 제공해주는 로그인 페이지가 아닌 내가 만든 로그인 페이지 사용하고 싶을 수 있다.   
+.loginPage("/user/login");을 붙이면 로그인을 해야할 상황이 왔을 때 /user/login으로 이동한다.   
+
+잘 작동될줄 알았지만 ID:newlec PW:111 로그인 시도하면 403에러가 난다.
+
+```java
+		http
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login");
+```
+
+Same Origin인지 확인할 수 있는 Key가 없다. 즉, CORS 공격에 대한 대비가 없기 때문이다.   
+cors를 비활성화 했다.
+
+```java
+		http
+			.cors()
+			.disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login");
+```
+
+하지만 이래도 ID:newlec PW:111 로그인 시도하면 403에러난다.   
+
+왜냐하면 /user/login 페이지에서 로그인하면 /user/login로 Post요청이 갈 것이다.   
+Spring Security를 사용하려면 /login으로 post요청을 보내야 한다.   
+이게 싫고 내가만든 post요청을 쓰려면 loginProcessingUrl통해 알려줘야 한다.   
+
+loginProcessingUrl에 매핑된 /user/login으로 Post요청이오면 스프링이 구현하고 있는 로그인 로직을 사용한다는 의미다.   
+따라서 form action속성과 맞춰 주기만 하면 막 써도 괜찮다.   
+기존에 내가 만들어 놓은 PostMapping /user/login이 있다면 무시된다.
+
+```java
+		http
+			.cors()
+			.disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login");
+```
+
+이래도 403에러. CSRF설정이 필요하다. Spring 버전에 따라 cors만 설정해도 되는 경우가 있다.
+
+```java
+		http
+			.cors().and()
+			.csrf().disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login");
+```
+
+만약 html에서 form태그 input의 name 속성이 스프링이 정한 username, password가 아니라 사용자가 임의로 정한 uid, pwd일 경우 로그인 되지 않는다.   
+html을 고쳤다면 로그인이 된다 defaultSuccessUrl는 로그인 성공시 이동할 url이다.
+
+```java
+		http
+			.cors().and()
+			.csrf().disable()
+			.authorizeHttpRequests()
+				.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+				.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+				.anyRequest().permitAll()
+			.and()
+				.formLogin()
+				.loginPage("/user/login")
+				.loginProcessingUrl("/user/login")
+				.defaultSuccessUrl("/admin/index");
+```
+
+## Logout
+
+Spring Security를 사용하면서 아래와 같이 logout을 처리하는 로직을 구현하면 무시된다.
+
+```java
+	@RequestMapping("logout")
+	public String logout(HttpSession session) {
+		
+		session.invalidate();
+		
+		return "redirect:/index";
+	}
+```
+
+Spring Security를 사용해 logout을 구현하는 방법.   
+.logout() 으로 구현 가능하다.   
+logoutUrl은 /user/logout 요청이 올 경우 스프링의 로그아웃 로직이 실행된다.   
+logoutSuccessUrl은 로그아웃에 성공할 시 이동할 url이다.
+
+```java
+		http
+			.cors()
+			.and()
+				.csrf().disable()
+				.authorizeHttpRequests()
+					.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+					.requestMatchers("/member/**").hasAnyRole("ADMIN", "MEMBER")
+					.anyRequest().permitAll()
+			.and()
+				.formLogin()
+					.loginPage("/user/login")
+					.loginProcessingUrl("/user/login")
+					.defaultSuccessUrl("/admin/index")
+			.and()
+				.logout()
+					.logoutUrl("/user/logout")
+					.logoutSuccessUrl("/index");
+```
+
+## 메뉴 등록 요청을 보낼 때 username을 얻는 방법
+
+어떤 회원이 메뉴 등록 요청, 글 작성 등.. 요청을 보낼 때 누가 요청을 했는지 알아야 할 필요가 있다.   
+아래는 Spring에서 username을 얻는 방법들이다.
+
+1
+
+```java
+	@PostMapping("reg")
+	public String reg(String title) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		
+		System.out.println(currentPrincipalName);
+		
+		return "redirect:list";
+	}
+```
+
+2
+
+```java
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Authentication authentication) {
+		String userName = authentication.getName();
+		
+		System.out.println(authentication.getPrincipal());
+		System.out.println(userName);
+		
+		return "redirect:list";
+	}
+```
+
+3
+
+```java
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Authentication authentication) {
+		
+		UserDetails user = (UserDetails) authentication.getPrincipal();
+//		getPrincipal() 이건 유저 정보를 준다. username, password(보호됨), enabled, 권한 등을 알 수 있다
+//		UserDetails로 형 변환만 해주면 된다.
+
+		System.out.println(user.getUsername());
+		
+		System.out.println(user.getPassword());
+//		이건 null이 뜬다
+		
+		return "redirect:list";
+	}
+```
+
+4
+
+```java
+
+	@PostMapping("reg")
+	public String reg(
+			String title,
+			Principal principal) {
+		
+		System.out.println(principal.getName());
+		
+		return "redirect:list";
+	}
+```
+
+5 Custom User 정보 얻기
 
 ```java
 	@PostMapping("reg")
 	public String reg(
 			String title,
 			Principal principal) {
-		
-//		방법 5 커스텀 사용자 정보 얻기
+
 		RlandUserDetails user = (RlandUserDetails) authentication.getPrincipal();
 		System.out.println(user.getUsername());
 		
 		return "redirect:list";
 	}
 ```
-
 
 참고 : [자바캔](https://javacan.tistory.com/entry/58)

@@ -141,7 +141,7 @@ let list = reactive([]);
 list = reactive(json.list); 도 안 됐다.
 
 아래 예제에선 model에 반응형 객체를 만들고 그 안에 list를 만들었다.   
-이렇게 하면 fetch문으로 list를 받아왔을 때 reactive하게 View(Template)에 반영된다.
+이렇게 하면 fetch문으로 데이터를 받아왔을 때 model.list에 넣어줌으로 reactive하게 View(Template)에 반영된다.
 
 ```vue
 <script setup>
@@ -468,8 +468,6 @@ shallowRef와 triggerRef는 Vue 3 Composition API에서 제공되는 리액티�
 shallowRef 함수는 단일 값 또는 객체를 리액티브하게 감싸는 역할을 한다.   
 일반적인 ref와 달리, shallowRef는 객체의 프로퍼티까지는 리액티브로 만들지 않는다. 즉, 객체 내부의 변경은 리액티브로 추적되지 않는다.
 
-
-
 ```vue
 <script setup>
 import { computed, onMounted, reactive, watch, ref, shallowRef, triggerRef } from 'vue';
@@ -531,9 +529,9 @@ onMounted(() => {
 </template>
 ```
 
-컴포넌트간 데이터 교환?
+## 컴포넌트간 데이터 교환
 
-과거방식
+### 과거방식
 
 아래는 NewMenu.vue 이다
 
@@ -555,9 +553,9 @@ export default{
 
 App.vue에서 model.newList를 NewMenu.vue의 data로 넘겼다
 
-현재방식
+### 현재방식
 
-Newmenu.vue 만 아래와 같이 바꾸면 된다
+NewMenu.vue 만 아래와 같이 바꾸면 된다
 
 ```vue
 <script setup>
@@ -693,13 +691,15 @@ function okHandler() {
 </template>
 ```
 
-okHandler()로는 props.show가 바뀌지 않는다.
-Set operation on key "show" failed: target is readonly.
-생각해보면 올바른 코드로 우리를 이끌고 있다
-modal이 아닌 app.vue에서 ok를 눌렀는지 cancel를 눌렀는지 알아야할 필요가있다
+okHandler()로는 props.show가 바뀌지 않는다. Set operation on key "show" failed: target is readonly.
 
+생각해보면 우리를 올바른 코드로 이끌고 있다.   
+modal.vue가 아닌 app.vue에서 ok를 눌렀는지 cancel를 눌렀는지 알아야할 필요가있다.   
 emit을 사용하여 Modal.vue에서 App.vue의 @ok 이벤트를 발생시킬 수 있다.
-아래 예제는 ok 이벤트를 발생시키며 단순 텍스트로 "데이터"도 전달 했다
+
+아래 예제는 modal.vue에서 app.vue의 ok이벤트를 발생시키며 단순 텍스트로 "데이터"도 전달 했다.
+
+### app.vue
 
 ```vue
 <script setup>
@@ -730,6 +730,7 @@ function dlgHandler(a) {
 </template>
 ```
 
+### modal.vue
 
 ```vue
 <script setup>
@@ -753,86 +754,9 @@ let props = defineProps({
         </section>
     </div>
 </template>
-
-<style scoped>
-.d-none {
-    display: none !important;
-}
-
-.screen {
-    background-color: rgba(0, 0, 0, 0.8);
-
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-
-    justify-content: center;
-}
-
-section {
-    background-color: white;
-    display: inline-block;
-
-    border-radius: .7em;
-}
-
-section>h1 {
-    font-size: 14px;
-    padding: 0px 10px;
-}
-
-section>.content {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    padding: 10px 20px;
-}
-
-section>.commands {
-    padding: 10px 10px;
-
-    display: flex;
-    justify-content: center;
-}
-</style>
 ```
 
 ## 모달 애니메이션 추가
-
-### App.vue
-
-```vue
-<script setup>
-import { ref } from 'vue';
-import Modal from './components/Modal.vue';
-
-let showModal = ref(false)
-
-function showHandler() {
-    showModal.value = true;
-}
-
-function dlgHandler(a) {
-    console.log(a); // 콘솔에 "데이터"가 찍힌다
-    showModal.value = false;
-}
-</script>
-
-<template>
-    <div>
-        <button @click="showHandler">show 모달</button>
-    </div>
-    <Modal title="공지사항" :show="showModal" @ok="dlgHandler">
-        <div>
-            안녕하세요
-        </div>
-    </Modal>
-</template>
-```
 
 ### Modal.vue
 
@@ -872,54 +796,9 @@ let props = defineProps({
     
 }
 
-.d-none {
-    display: none !important;
-}
-
-.screen {
-    background-color: rgba(0, 0, 0, 0.8);
-
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-
-    justify-content: center;
-}
-
-section {
-    background-color: white;
-    display: inline-block;
-
-    border-radius: .7em;
-}
-
 .show-effect{
     animation: show-effect 1s forwards;
 }
-
-section>h1 {
-    font-size: 14px;
-    padding: 0px 10px;
-}
-
-section>.content {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    padding: 10px 20px;
-}
-
-section>.commands {
-    padding: 10px 10px;
-
-    display: flex;
-    justify-content: center;
-}
-</style>
 ```
 
 ## Vuejs Transition을 이용한 애니메이션
@@ -964,7 +843,9 @@ function showHandler() {
 
 ## 페이지 이동간 Transition
 
-Vue Router를 이용해야 한다.
+Vue Router를 이용하여 페이지를 이동할 때 효과를 주려고 한다.
+
+두 가지 방법 모두 가능하다.
 
 1
 
@@ -1033,5 +914,3 @@ import Aside from './Aside.vue';
 }
 </style>
 ```
-
-두 가지 방법 모두 가능하다

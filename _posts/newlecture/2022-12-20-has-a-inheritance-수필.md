@@ -4,9 +4,9 @@ tags: java
 ---
 
 상속(inheritance)
-has_a 결합관계 제품과 부품의 관계가 된다 / 상속이란 단어에 수직적인 느낌이 있어서 상속으로 표현하지 않고 제품과 부품으로 표현한다.
-aggregation has a(부품을 합쳐서 사용) / composition has a(일체형)
-main과 main에서 사용된 캡슐이 있다 / main(제품) main에서 사용된 캡슐(의존객체, 부품)
+has_a 결합관계 제품과 부품의 관계가 된다 / 상속이란 단어에 수직적인 느낌이 있어서 상속으로 표현하지 않고 제품과 부품으로 표현한다.   
+aggregation has a(부품을 합쳐서 사용) / composition has a(일체형)   
+main과 main에서 사용된 캡슐이 있다 / main(제품) main에서 사용된 캡슐(의존객체, 부품)   
 부품과 부품에서 사용된 캡슐이 있다 / ExamConsole캡슐(제품)에서 사용된 Exam캡슐(부품) / main에겐 부품인 ExamConsole캡슐이 제품이 될 수 있다
 
 Dependency(의존객체, 종속성객체, 부품)
@@ -19,15 +19,18 @@ ExamConsole내에서 Exam을 사용도 하지만 멤버로 구성도 하고있�
 ExamConsole <-> Exam
 
 
+**Composition has a**
+
 ```java
-// Composition has a
 A a = new A();
 ```
+
 A가 생성될 때 A의 생성자에서 B를 결합하므로 부품 교체가 힘들다.   
 사용자가 부품 B의 존재를 알 수 없다.
 
+**Association has a**
+
 ```java
-// Association has a
 B b = new B();
 A a = new A();
 
