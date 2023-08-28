@@ -1,11 +1,29 @@
 ---
-title: Rest
+title: RestController
 tags: java
 ---
 
-rest는 html이 아닌 javaspript가 이 값들을 이용한다.
+## RestController
 
-처음 page를 블러온 이후 값만 바꿀 땐 @RestController를 이용한다.
+단순히 css, 값만 변경될 때 url을 수정하고 page를 다시 요청하면 서버에서 page를 만들어 클라이언트에게 오기까지 시간이 걸리며 page가 새로고침 된다.   
+요즘은 rest방식으로 값만 가져와 page를 다시 요청하지 않고 javascript로 값만 바꾼다.
+
+값을 가져올 때 View는 목록을 위해서만 만들어라 단일값을 가져올 땐 각자 가져오자. 값 하나가 필요해도 레코드 단위로 가져와서 getter를 사용하자.
+
+Rest 방식은 기존 방식과 달리 url에도 차이가 있다.
+
+**@Controller -> 문서명**   
+/menu/list   
+/menu/detail?id=3
+
+**@RestController -> data**   
+/menus		method:GET 메뉴 전체 줘   
+/menus/3	method:GET(get) 3번 메뉴 줘   
+/menus/3	method:DELETE(delete)   
+/menus/3	method:PUT(edit)   
+/menus		method:POST(insert)   
+
+web이 지원하는 메소드는 많으나 html이 지원하는 메소드는 get, post뿐이다
 
 ```java
 	@GetMapping("/menus/{id}")
@@ -14,7 +32,7 @@ rest는 html이 아닌 javaspript가 이 값들을 이용한다.
 		return "menu " + menuId;
 	}
 ```
-	
+
 메소드의 인자는 쿼리스트링에서 찾는다. 쿼리스트링이 아닌 url에 있는 값을 받고 싶을 수 있다.   
 url의 경로의 id를 메소드의 파라미터 menuId로 받는 방법은 @PathVariable이다. return은 url경로의 id가 출력된다.
 
@@ -37,10 +55,10 @@ url의 경로의 id를 메소드의 파라미터 menuId로 받는 방법은 @Pat
 	}
 ```
 
-script는 브라우저 내에서만 이용가능하다 브라우저 밖으로 벗어나는 일은 금기 였다.
-com component는 모든 언어에서 이용가능했다. javascript가 이걸로 windows library를 이용해 밖에서 데이터를 가져올 수 있게됐다.
-com component가 activeX다.
-javascript를 사용하는 브라우저가 동기와 비동기를 지원한다
+script는 브라우저 내에서만 이용가능하다 브라우저 밖으로 벗어나는 일은 금기 였다.   
+com component는 모든 언어에서 이용가능했다. javascript가 이걸로 windows library를 이용해 밖에서 데이터를 가져올 수 있게됐다.   
+com component가 activeX다.   
+javascript를 사용하는 브라우저가 동기와 비동기를 지원한다.
 
 ```js
 window.addEventListener("load", function() {
@@ -65,15 +83,13 @@ window.addEventListener("load", function() {
 		//	비동기형(true)이 기본이다. false는 동기형
 
 		request.send();
-		//	동기형은 send 후 응답올때까지 아무것도 못한다. 응답이 온 뒤 아래 console.log가 실행된다
+		//	동기형은 send 후 응답올때까지 아무것도 못한다. 응답이 온 뒤 아래 console.log가 실행된다.
+		
 		console.log(request.responseText);
 		//	비동기형은 아직 응답이 오지 않아도 console.log가 실행되므로 빈 텍스트가 찍힐 수 있다. 응답이 오기전에 다른 행동을 할 수 있다
-		
 		//	request.responseText - 응답이 온 text는 JSON형식으로 온다
 	};
 ```
-
----------------------------------------------
 
 ```js
 		const request = new XMLHttpRequest();
@@ -87,9 +103,7 @@ window.addEventListener("load", function() {
 
 비동기형의 문제점 해결. 응답이 온 뒤에 console.log를 찍는다. 콜백함수
 
------------------------------------------------------
-	
---27일 js 현황--------------------------------
+## rest로 데이터를 요청하고 이용하는 연습
 	
 ```js
 window.addEventListener("load", function() {
@@ -215,7 +229,6 @@ window.addEventListener("load", function() {
 
 		// ------------------------------------------------------------
 
-
 		//	목록 만들어 채우기
 		//	2. 문자열을 이용한 객체 생성
 
@@ -251,7 +264,6 @@ window.addEventListener("load", function() {
 			//	menuList.innerHTML += template;
 			//	메뉴 하나를 html문서에 출력했다. 하지만 이렇게 하면 안된다
 			//	문자열을 누적하면 오버헤드가 일어난다.
-			//	새로 만든다???
 
 			menuList.insertAdjacentHTML("beforeend", template);
 			//	template를 누적하는 좋은 예시
