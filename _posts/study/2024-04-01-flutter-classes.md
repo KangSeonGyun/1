@@ -5,28 +5,34 @@ tags: flutter
 
 ## 클래스들..
 
-* Scaffold
+### Scaffold
 
   * extendBody: true - BottomNavigationBar의 모서리가 둥글게 깍이며 약간의 틈이 생겼다. body의 콘텐츠가 BottomNavigationBar밑에 깔리길 원했다.  
 
   * resizeToAvoidBottomInset: false - 키보드로 인해 bottom overflow가 발생해서 설정한 옵션. 이 설정을 하지 않아도 ScrollView면 overflow가 발생하지 않는다
 
-* Appbar - kToolbarHeight 앱바 기본 높이
+  * extendBodyBehindAppBar: true - 배경위에 겹치는 앱바 만들기
+
+  * persistFooterButtons - 스크롤 되는 경우에도 지속적으로 표시되는 위젯. BottomNavigationBar 위, body 아래에 렌더링 됨
+
+### Appbar - kToolbarHeight 앱바 기본 높이
   ```dart
     scrolledUnderElevation: 0 // 스크롤 시 앱바 흐려지는 효과 없애기
   ```
-* IntrinsicHeight - 자식 위젯의 높이를 자식 위젯들 중 가장 큰 높이에 맞춰주는 역할
+### IntrinsicHeight - 자식 위젯의 높이를 자식 위젯들 중 가장 큰 높이에 맞춰주는 역할
 
-* NestedScrollView - 한 화면에 같은 방향의 스크롤이 2개이상일 때 각각 스크롤 되는 것이 아닌 같이 스크롤 되길 원할 때 사용. TabBarView를 구현할 때 자주 쓰임
+### NestedScrollView - 한 화면에 같은 방향의 스크롤이 2개이상일 때 각각 스크롤 되는 것이 아닌 같이 스크롤 되길 원할 때 사용. TabBarView를 구현할 때 자주 쓰임
 
-  <details>
-  <summary>SliverOverlapAbsorber/SliverOverlapInjector</summary>
-  <div markdown="1">
-  pinned효과 등..으로 고정되어 있는 위젯(Appbar, SliverPersistentHeader 등)을 SliverOverlapAbsorber로 겹쳐지는 위젯으로 처리 할 수 있다. SliverOverlapInjector로 그 고정되어 있는 위젯의 크기를 삽입할 수 있다.     
+  * SliverOverlapAbsorber/SliverOverlapInjector
+
+    pinned효과 등..으로 고정되어 있는 위젯(Appbar, SliverPersistentHeader 등)을 SliverOverlapAbsorber로 겹쳐지는 위젯으로 처리 할 수 있다. SliverOverlapInjector로 그 고정되어 있는 위젯의 크기를 삽입할 수 있다.     
+    
+    즉, "headerSliverBuilder"가 다음 Sliver와 겹치지 않는 위젯만 빌드하는 경우에는 이 작업이 필요하지 않다.   
   
-  즉, "headerSliverBuilder"가 다음 Sliver와 겹치지 않는 위젯만 빌드하는 경우에는 이 작업이 필요하지 않다.   
+  * SliverOverlapAbsorber와 SizedBox만 이용해 Sub SliverPersistentHeader를 고정시킨 예시
   
-  * SliverOverlapAbsorber와 SizedBox만 이용해 Sub SliverPersistentHeader를 고정시킨 예시 https://honor-driven.dev/flutter%EB%A1%9C-shopping-%EC%95%B1-%EB%A7%8C%EB%93%A4%EA%B8%B0-3-nestedscrollview-cec18854f859  
+    https://honor-driven.dev/flutter%EB%A1%9C-shopping-%EC%95%B1-%EB%A7%8C%EB%93%A4%EA%B8%B0-3-nestedscrollview-cec18854f859
+
     body: TabBarView()를 TabBarDelegate(SliverPersistentHeader)로 겹쳐지는 위젯으로 만든 뒤 안보이는 SizedBox를 겹쳐놔 TabBarView()goryBreadcrumbs(SliverPersistentHeader)도 상단에 고정되게 했다.
   
   * 나만의 다양한 시도 기록..
@@ -235,17 +241,13 @@ tags: flutter
     }
     ```
 
-  </div>
-  </details>
-   
-
-* CustomScrollView - 슬리버를 사용하여 사용자 정의 스크롤 효과를 생성하는 ScrollView 위젯.
+### CustomScrollView - 슬리버를 사용하여 사용자 정의 스크롤 효과를 생성하는 ScrollView 위젯.
 
   * NestedScrollView와 아주 비슷하다.
 
   * slivers: [] 바로 밑이 아닌 SliverToBoxAdapter → GridView 이와 같은 구조라면 전체 스크롤 공유가 안된다.
 
-* Sliver란? 스크롤 가능한 영역
+### Sliver란? 스크롤 가능한 영역
 
   * SliverMainAxisGroup - 고정되어야 할 서브 앱바가 있는 경우 유용할 듯 하다
 
@@ -260,7 +262,7 @@ tags: flutter
   * DecoratedSliver - sliver를 자식으로 갖는 꾸미기 박스
   
 
-* Chip - Material Design 3
+### Chip - Material Design 3
   ```dart
     // 칩 기본 패딩을 없애려고 해본 것
     visualDensity: const VisualDensity(horizontal: 0.0, vertical: -4),
@@ -269,26 +271,210 @@ tags: flutter
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
   ```
 
-* TextField, TextFormField
+### TextField, TextFormField
 
   * 화면 터치시 키보드 내려가게 하기
+
     ```dart
     onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
     ```
 
-* AnnotatedRegion<SystemUiOverlayStyle\> - 앱의 시스템 UI(상태 표시줄, 네비게이션 바) 오버레이 스타일 지정
-  * SafeArea 적용하고 각 페이지 별로 시스템 UI 색상이 다르다면 SafeArea의 top: false, bottom: false 속성을 이용해보자
+  * 여러 TextField, TextFormField에서 완료를 누르거나, 포커스를 잃을 경우 validate
 
-* OverflowBox - 부모 위젯보다 더 큰 높이를 주면 Overflow를 발생시킨다. 이상하게 위로 넘치게 하고 싶으면 alignment: Alignment.bottomCenter를 줘야 했다
+    * onFieldSubmitted, key, FocusNode()가 필요할 듯 하다.
 
-* InputDecoration
+### AnnotatedRegion<SystemUiOverlayStyle\> - 앱의 시스템 UI(상태 표시줄, 네비게이션 바) 오버레이 스타일 지정
+
+  * 위 방법 외에도 SafeArea 적용하고 각 페이지 별로 시스템 UI 색상이 다르다면 SafeArea의 top: false, bottom: false 속성을 이용해보자
+
+  **문제**
+
+  * SafeArea로 인해 bottomNavigationBar 밑에 Scaffold 배경색이 들어갔다
+
+  **해결**
+
+  ```dart
+    bottomNavigationBar: Container(
+                          color: Color...,
+                          child: SafeArea(
+                            child: ...
+  ```
+
+  https://stackoverflow.com/questions/53873270/flutter-background-of-unsafe-area-in-safearea-widget
+
+### OverflowBox - 부모 위젯보다 더 큰 높이를 주면 Overflow를 발생시킨다. 이상하게 위로 넘치게 하고 싶으면 alignment: Alignment.bottomCenter를 줘야 했다
+
+### InputDecoration
 
   **문제**
   
-  suffixIcon에 IconButton을 넣고 IconButton의 constraints을 조정해도 아무효과가 없었다.
+  TextField를 꾸미던 중 suffixIcon에 IconButton을 넣고 IconButton의 constraints을 조정해도 아무효과가 없었다.
 
   **해결**
 
   알고보니 InputDecoration에도 constraints가 있었다.
 
+### InkWell
+
+  **문제**
+
+  InkWell을 적용했을 때 잉크 퍼지는 효과는 보이지 않고, onTap()메소드는 정상작동 했다.
+
+  **해결**
+
+  https://api.flutter.dev/flutter/material/InkWell-class.html
+
+  InkWell은 Material바로 위에 효과를 보여주므로 Material과 InkWell 사이에 다른 색깔이 있는 위젯이 있으면 잉크 퍼지는 효과는 보이지않는다.
+
+  ```dart
+  Material(
+    // color: Colors.teal[900],
+    child: Ink(
+      color: Colors.blue,
+      child: InkWell(
+      onTap: () {},
+        child: Container(
+          // color: ,
+          child: Icon(
+            Icons.abc,
+            size: 32,
+          ),
+        ),
+      ),
+    ),
+  ),
+  ```
+
+  여기서 포인트는 Container 위젯에 color를 주지 않는 것이다. Container의 색상을 InkWell의 위(Ink)로 올려 InkWell효과가 보인다.
+
+  Ink 위젯을 생략하고 Material의 color를 줘도 동일한 효과가 나왔다.
+
+### Row
+
+  **문제**
+
+  Row에서 Expanded를 하면 가로방향(width)는 확장되지만 세로방향(height)는 확장되지 않았다.
+
+  난 박스 2도 높이를 지정하지 않고 박스 1과 같은 높이를 갖길 원했다
+
+  ```dart
+  // 예시코드
+  Row(
+    children: [
+      Expanded(
+        child: Container(
+          height: 50,
+          width: 50,
+          color: Colors.red,
+          child: const Text("박스 1"),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          width: 50,
+          color: Colors.blue,
+          child: const Text("박스 2"),
+        ),
+      ),
+    ],
+  ),
+  ```
+
+  **해결**
+
+  IntrinsicHeight를 사용하면 된다고 한다.
+
+  하지만 IntrinsicHeight는 비용이 많이 든다고 하니 두 번째 답변인 Table을 사용하는 게 좋아보인다.
+
+  https://stackoverflow.com/questions/51326170/flutter-layout-row-column-share-width-expand-height
+
+### ExpansionTile과 ExpansionPanelList, ExpansionPanel
+
+  하위 항목을 표시하거나 숨기기 위해 타일을 확장하거나 축소하는 확장 화살표 아이콘이 있는 위젯
+
+  * ExpansionPanelList.radio - 한 번에 하나의 패널만 열리는 위젯
+
+### Table
+
+  **문제**
+
+  다중 위젯(childern)을 동시에 정렬할 수 있는건 Column, Row 뿐인가? Column, Row 사용 시 차지할 수 있는 공간이 있다면 전부 차지해 버리는 문제가 있다.
+
+  **해결**
+
+  Table을 사용하면 나름 해결 가능하다.
+
+### 함수 showModalBottomSheet()
+
+  **문제**
+
+  backgroundColor에 흰색을 줘도 약간 흐린 흰색이 나왔다
+
+  **해결**
+
+  elevation: 0
+
+  **문제**
+
+  모달 내부 상태값 변경
+
+  **해결**
+
+  StatefulBuilder
+
+  https://stackoverflow.com/questions/52414629/how-to-update-state-of-a-modalbottomsheet-in-flutter
+
+### Wrap
+
+  runSpacing - 교차 축 간격
+
+### Divider
+
+  DashedDivider
+
+  ```dart
+  class MySeparator extends StatelessWidget {
+    const MySeparator({Key? key, this.height = 1, this.color = Colors.black})
+        : super(key: key);
+    final double height;
+    final Color color;
+
+    @override
+    Widget build(BuildContext context) {
+      return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final boxWidth = constraints.constrainWidth();
+          const dashWidth = 10.0;
+          final dashHeight = height;
+          final dashCount = (boxWidth / (2 * dashWidth)).floor();
+          return Flex(
+            children: List.generate(dashCount, (_) {
+              return SizedBox(
+                width: dashWidth,
+                height: dashHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: color),
+                ),
+              );
+            }),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            direction: Axis.horizontal,
+          );
+        },
+      );
+    }
+  }
+  ```
+
+  https://stackoverflow.com/questions/54019785/how-to-add-line-dash-in-flutter
+
+### Transform
+
+  stack widget 없이 겹치려고 사용했다. 하지만 얘는 100px 상자를 위로 20px올리면 아래공간은 유지되므로 총 120px 공간을 차지한다.
+
+  ```dart
+    Transform.translate(
+      offset: const Offset(0, -20),
+      child: ... 
+  ```
 
