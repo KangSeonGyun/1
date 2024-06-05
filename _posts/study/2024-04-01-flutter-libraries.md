@@ -5,18 +5,18 @@ tags: flutter
 
 메타정보만 간단히 기록
 
-## 라이브러리..
+## 상태관리
 
-### 상태관리
+### provider: ^6.1.2 (9690)
 
-* provider: ^6.1.2 - 상태관리 패키지 (9690)
+* 화면 일부분만 reBuild하려고 써봤다. StatefulBuilder 혹은 Stateful과 GlobalKey로 하는 방법도 있는 듯 하다. https://vintageappmaker.tistory.com/510
 
-  * 화면 일부분만 reBuild하려고 써봤다. StatefulBuilder 혹은 Stateful과 GlobalKey로 하는 방법도 있는 듯 하다. https://vintageappmaker.tistory.com/510
+* Provider.of<T>(context) 는 watch와 유사하게 동작
+* Provider.of<T>(context, listen: false) 는 read와 유사하게 동작
 
-  * Provider.of<T>(context) 는 watch와 유사하게 동작
-  * Provider.of<T>(context, listen: false) 는 read와 유사하게 동작
+### stacked: ^3.4.0 (1388)
 
-* stacked: ^3.4.0 - MVVM 구조를 쉽게 만들어주는 라이브러리 (1388)
+MVVM 구조를 지원하는 라이브러리
 
   <details>
   <summary>stacked 정리</summary>
@@ -70,23 +70,32 @@ tags: flutter
 
     항목을 선택한 후 사용자에게 보여줄 추가 데이터를 가져와야 하는 Details 뷰에 적절
 
-
   </div>
   </details>
 
-* stacked_services: ^1.1.0 - stacked 라이브러리. NavigationService, DialogService, SnackbarService, BottomSheetService 제공 (261)
+### stacked_services: ^1.1.0 (261)
+stacked 라이브러리. NavigationService, DialogService, SnackbarService, BottomSheetService 제공
 
-* stacked_shared: ^1.4.0 - stacked 패키지 간의 공유 코드 모음 (2)
+### stacked_shared: ^1.4.0 (2)
+stacked 패키지 간의 공유 코드 모음
 
-### 저장
+## 저장
 
-* shared_preferences: ^2.2.2 - 간단판 내용을 파일로 저장해두고 앱을 시작할 때 파일을 읽어온다. 디바이스 디스크의 데이터가 유지된다는 보장이 없으므로 중요한 데이터 저장은 권장하지 않는다 (8883)
+### shared_preferences: ^2.2.2 (8883)
+간단판 내용을 파일로 저장해두고 앱을 시작할 때 파일을 읽어온다. 디바이스 디스크의 데이터가 유지된다는 보장이 없으므로 중요한 데이터 저장은 권장하지 않는다
 
-* hive: ^2.2.3 - 기기의 내부저장소를 사용하는 키-값 데이터베이스 (5552)
+### hive: ^2.2.3 (5552)
+기기의 내부저장소를 사용하는 키-값 데이터베이스 
 
-* sqflite: ^2.3.3 -  SQLite 플러그인. 모든 폰에는 SQLite 데이터베이스가 있다. 복잡한 데이터를 기기에 저장할 수 있다. (4614)
+### sqflite: ^2.3.3 (4614)
+SQLite 플러그인. 모든 폰에는 SQLite 데이터베이스가 있다. 복잡한 데이터를 기기에 저장할 수 있다.
 
-### Carousel, Slide, 이미지 관련
+## Carousel, Slide, 이미지 관련
+
+### image_picker: ^1.1.1 (6614)
+갤러리에서 사진, 동영상을 가져오거나 카메라로 사진, 동영상을 촬영하여 바로 쓸 수 있다
+
+  안드로이드에선 메모리 부족시 앱을 종료한다고 한다. 이를 대비한 코드도 설명되어 있으니 참고하자
 
 * cached_network_image: ^3.3.1 - 인터넷 이미지 표시 및 캐시 디렉터리에 보관 (5719)
 
@@ -178,7 +187,7 @@ tags: flutter
 
 * flutter_image_slideshow: ^0.1.6 - 간단한 이미지 슬라이드쇼 위젯입니다. 주로 이미지 위젯용이지만 다른 위젯도 사용할 수 있다 (163)
 
-### 디자인, 레이아웃, 위젯
+## 디자인, 레이아웃, 위젯
 
 * auto_size_text: ^3.0.0 - 지정한 범위 내에 완벽하게 맞도록 텍스트 크기를 자동으로 조정 (4381)
 
@@ -210,7 +219,7 @@ tags: flutter
 
 * simple_animation_progress_bar: ^1.8.2 - 진행률을 표시하는 막대 위젯 (17)
 
-### 애니메이션
+## 애니메이션
 
 * animations: ^2.0.11 - 사용자 정의 애니메이션을 만들거나 미리 만들어진 애니메이션을 사용할 수 있다 (5789)
 
@@ -224,13 +233,71 @@ tags: flutter
 
 * animated_theme_switcher: ^2.0.10 - 애니매이션 효과주면서 테마 바꾸기 (442)
 
-### 다국어, 현지화
+## 다국어, 현지화
 
-* intl: ^0.19.0 - 날짜/숫자 형식 지정. 다국어 지원. (5072)
+### intl: ^0.19.0 (5072)
 
-* flutter_localization: ^0.2.0 - Flutter SDK flutter_localizations 먼저 참고하자. 인앱 현지화 (189)
+날짜/숫자 형식 지정. 다국어 지원.
 
-### 기능
+## 소셜 로그인
+
+* google_sign_in: ^6.2.1(2948) - 구글 로그인
+
+  * IOS 설정 방법 - https://pub.dev/packages/google_sign_in_ios
+
+    * GoogleService-Info.plist 파일이 필요 없다.
+
+## Firebase
+
+### firebase_core: ^3.0.0 (3400)
+
+https://firebase.google.com/docs/flutter/setup?hl=ko&authuser=0&_gl=1
+
+* Firebase CLI 설치 → FlutterFire CLI 설치 → firebase login
+  ```
+  npm 없이 설치 curl -sL https://firebase.tools | bash
+  설치경로 /usr/local/bin/firebase
+
+  npm으로 설치 npm install -g firebase-tools
+  설치경로 /Users/gyun/.nvm/versions/node/v20.14.0/bin/firebase
+  ```
+
+* Flutter 프로젝트 디렉토리로 이동 → flutterfire configure 명령 실행 → firebase.json, firebase_options.dart, google-services.json 및 각종 파일들 자동 생성 → main()에 아래와 같은 함수 추가 → flutter run
+  ```dart
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  ```
+
+* 이후 플러그인 설치방법
+  ```
+  flutter pub add PLUGIN_NAME
+  flutterfire configure
+  flutter run
+  ```
+
+* flutterfire configure 이란?
+  ```
+  이렇게 flutterfire configure를 처음 실행한 후에는 다음 경우에 언제든지 명령어를 다시 실행해야 합니다.
+
+  • Flutter 앱에서 새 플랫폼 지원을 시작합니다.
+
+  • 특히 Google, Crashlytics, Performance Monitoring, Realtime Database로 로그인을 시작할 때와 같이 Flutter 앱에서 새 Firebase 서비스 또는 제품을 사용합니다.
+
+  명령어를 다시 실행하면 Flutter 앱의 Firebase 구성이 최신 상태로 유지되고 Android의 경우 필요한 Gradle 플러그인이 앱에 자동으로 추가됩니다.
+  ```
+
+* etc
+
+  * Apple 플랫폼에서 클라우드 메시징을 사용하려면 다음 기본 요건을 충족해야 합니다.
+    ```
+    실제 Apple 기기를 설정합니다.
+    Apple 개발자 계정의 Apple 푸시 알림 인증 키를 가져옵니다.
+    Xcode의 App(앱) > Capabilities(기능)에서 푸시 알림을 사용 설정합니다.
+    ```
+
+
+## 기능
 
 * flutter_native_splash: ^2.3.9 - 기본 앱(네이티브 앱)이 플러터를 로드하는 동안 스플래쉬 (7458)
 
@@ -239,6 +306,33 @@ tags: flutter
 * url_launcher: ^6.2.5 - 웹브라우저, 메일, 전화, 문자를 실행 (7034)
 
 * dio: ^5.4.2+1 - HTTP 요청을 할 때 유용 (6824)
+
+* flutter_launcher_icons: ^0.13.1 - 앱 아이콘 자동생성 (6697)
+
+  **문제**
+
+  안드로이드 앱 아이콘이 원형으로 바뀌면서 위 라이브러리 사용 시 아이콘이 확장되서 보인다.
+
+  **해결**
+
+  1. flutter_launcher_icons.yaml에서 adaptive_icon_background, adaptive_icon_foreground로 아이콘 생성
+
+  2. android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml 파일을 다음과 같이 수정
+
+  ```xml
+  <?xml version="1.0" encoding="utf-8"?>
+  <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+   <foreground>
+      <inset
+        android:drawable="@drawable/ic_launcher_foreground"
+        android:inset="16%" />
+    </foreground>
+  </adaptive-icon>
+  ```
+
+  https://github.com/fluttercommunity/flutter_launcher_icons/issues/96#issuecomment-1325387518
+
 
 * flutter_local_notifications: ^17.1.0 - 알림 보내기. firebase_messaging이랑 비슷한 기능인 듯? (6091)
 
@@ -310,7 +404,7 @@ tags: flutter
 
 * string_to_hex: ^0.2.2 - (18) String or/and Hash 를 HEX로 변환
 
-### SDK, Plug in
+## SDK, Plug in
 
 * firebase_auth: ^4.19.4 - Firebase Auth plugin (3701)
 

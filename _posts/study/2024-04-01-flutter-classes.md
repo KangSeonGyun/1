@@ -304,6 +304,34 @@ tags: flutter
 
 ### OverflowBox - 부모 위젯보다 더 큰 높이를 주면 Overflow를 발생시킨다. 이상하게 위로 넘치게 하고 싶으면 alignment: Alignment.bottomCenter를 줘야 했다
 
+### TextButton
+
+  **문제**
+
+  * 버튼의 height를 48보다 작게하고 싶었다
+
+  **해결**
+
+  padding. minimumSize, tapTargetSize을 조정하자
+
+  ```
+  TextButton(
+    onPressed: () => Navigator.pop(context),
+    style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        alignment: Alignment.centerLeft),
+    child: Icon(
+      CupertinoIcons.back,
+      color: Colors.black,
+      size: 18,
+    ),
+  ),
+  ```
+
+  https://stackoverflow.com/questions/52628215/flutter-remove-padding-in-buttons-flatbutton-elevatedbutton-outlinedbutton
+
 ### InputDecoration
 
   **문제**
@@ -394,15 +422,36 @@ tags: flutter
 
   * ExpansionPanelList.radio - 한 번에 하나의 패널만 열리는 위젯
 
-### Table
+### RadioListTile
+
+  **기본 패딩 지우기 (Radio도 해당)**
+
+  contentPadding, visualDensity 활용
+
+  ```dart
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 4,
+      vertical: 4,
+    ),
+    visualDensity: const VisualDensity(
+      horizontal: VisualDensity.minimumDensity,
+      vertical: VisualDensity.minimumDensity,
+    ),
+  ```
+
+  https://stackoverflow.com/questions/50317072/how-can-i-remove-internal-padding-on-a-radiolisttile-so-i-can-use-3-radiolisttil
+
+### Column
 
   **문제**
 
   다중 위젯(childern)을 동시에 정렬할 수 있는건 Column, Row 뿐인가? Column, Row 사용 시 차지할 수 있는 공간이 있다면 전부 차지해 버리는 문제가 있다.
 
   **해결**
+  
+  mainAxisSize: MainAxisSize.min 속성을 이용해 보자
 
-  Table을 사용하면 나름 해결 가능하다.
+### Table
 
 ### 함수 showModalBottomSheet()
 
@@ -478,3 +527,43 @@ tags: flutter
       child: ... 
   ```
 
+### Semantics
+
+  위젯의 의미에 대한 설명으로 위젯 트리에 주석을 추가하는 위젯. 보조 기술, 검색 엔진 및 기타 의미 분석 소프트웨어에서 애플리케이션의 의미를 결정하는 데 사용
+
+### ListView
+
+  **문제**
+
+  가로방향 스크롤을 만드려고 scrollDirection: Axis.horizontal을 사용하니 ListView의 높이를 정해줘야 했고, 그 높이를 벗어나는 위젯 혹은 InkWell 효과는 화면에서 짤렸다.
+
+  **해결**
+
+  clipBehavior: Clip.none, ListView외에 다른 위젯에서도 짤리는 일이 있다면 이 속성을 기억하자  
+
+
+### Stack
+
+  이미지 위에 Stack, Positioned를 이용해 Container를 겹치고 이미지의 width와 Container의 width를 동일하게 하고 싶어서 width: double.infinity를 했으나 에러가 났다. 신기하게 bottom: 0 만 해서는 안되고 left, right도 0으로 해줘야 에러가 안났다.
+
+  ```dart
+  Positioned(
+  bottom: 0,
+  left: 0,
+  right: 0,
+  child: Container(
+    width: double.infinity,
+    padding: const EdgeInsets.fromLTRB(18, 5, 0, 3),
+    decoration: BoxDecoration(
+        color: Colors.white60,
+        borderRadius: BorderRadius.circular(12)),
+      child: Text(
+        '텍스트',
+      ),
+    ),
+  ),
+  ```
+
+  파트너가 곤충업체 업체마다 갖고있는 카테고리가 다르다.
+
+  이미지가 커져야 한다.
