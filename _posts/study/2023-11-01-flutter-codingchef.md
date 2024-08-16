@@ -1535,6 +1535,113 @@ https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
 * When the parent widget updates this widget.
 * When the dependencies that the builder function subscribes to change.
 
+## Stateless vs Stateful
+
+State란? UI가 변경되도록 영향을 주는 데이터(서버에서 받아온 값, 체크박스 체크 여부, 텍스트 필드에 값이 입력되고 있는지)
+
+Statelss란? State가 변하지 않는 위젯. rebuild되지 않는 한 상태가 변하지 않는다. (rebuild는 비용이 저렴하다!)
+
+조금매운맛 2번 강좌 한 번 더보기!@!@!
+
+## Flutter의 final, const
+
+final, const는 모두 한 번만 초기화 가능하다.
+
+### final (run-time constant)
+
+* final
+
+  ```dart
+  class Aminal {
+    final String name;
+    final String imgPath;
+    final String location;
+  }
+  ```
+
+* 앱이 실행되기 전까지 타입을 정할 수 없는 경우가 있다.
+즉, 런타임 때 변수를 초기화 하기 위해 사용한다.
+
+* final초기화 방법
+  1. 변수 생성시 초기값 주기
+  2. 객체 생성자를 통해 final 변수 초기값 전달
+
+* final 변수는 rebuild를 통해 새로운 값으로 바꿀 수 있다
+
+```dart
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key, required this.score});
+
+  final score;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(score);
+  }
+}
+
+// 위와 같은 위젯이 있다면...
+
+MyWidget(score: '30')
+
+MyWidget(score: '100')
+
+// 이런 식으로..
+```
+
+### const (compile-time constant)
+
+* 컴파일 과정에서 상수가 된다.
+
+* const초기화 방법
+  1. 변수 선언과 동시에 초기화 해야한다.
+
+* Static 데이터. 즉, 한 번 정해지면 바뀌지 않는 데이터를 사용하는 widget 앞에 const를 붙이면 좋다.   
+화면이 rebuild 될때 const가 붙은 widget은 rebuild하지 않고 재사용한다. **성능↑**
+
+* 만약 컴파일 시에 변하지 않는 상수값이라면 당연히 런타임 시에도 변하지 않을 것이다.
+
+### 예시
+
+```dart
+const time = DateTime.now();
+// 현재 시간은 런타임 환경에서 알 수 있으므로 에러난다.
+final time = DateTime.now();
+// 가능
+```
+
+## Null safety
+
+primitive type은 기본적으로 null을 허용하지 않는다. 예를들어 int형은 기본적으로 덧셈과 같은 기능이 가능해야 하므로 null은 올 수 없다.
+
+### lazy initialization
+
+```dart
+class Person {
+  late int age = calculate();
+}
+
+int calculate(){
+  return 30;
+}
+
+void main() {
+  Person p = Person();
+  print('abcd');
+  print(p.age);
+}
+
+// 출력 순서
+// abcd
+// 30
+```
+
+즉 main 함수 첫 번째 Person 객체가 생성될 때 calculate()함수가 실행되지 않는다.
+마지막에 print(p.age);로 age변수가 참조될 때 age를 초기화 하는 것을 lazy initialization이라고 한다.
+
+## WidgetsFlutterBinding.ensureInitialized();
+main함수에서 runApp()이 호출되기 전까진 플러터 엔진이 초기화되지 않는다. 하지만 Firebase.initializeApp()같은 비동기 함수는 플러터와 통신을 하길 원한다. 즉, main함수 내에서 플러터 엔진 초기화 후에 Firebase초기화 해야한다. 플러터 코어 엔진 초기화 하는 함수가 바로 WidgetsFlutterBinding.ensureInitialized(); 이다.
+
 ## Tip
 
 * onTap(), onPressed() 차이?
@@ -1548,23 +1655,6 @@ https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
 * _ (언더스코어)
 
   필요없는, 안쓰는 매개변수를 나타낸다.
-
-* const
-
-  Static 데이터. 즉, 한 번 정해지면 바뀌지 않는 데이터를 사용하는 widget 앞에 const를 붙이면 좋다.   
-  화면이 rebuild 될때 const가 붙은 widget은 rebuild하지 않고 재사용한다. **성능↑**
-
-* final
-
-  ```dart
-  class Aminal {
-    final String name;
-    final String imgPath;
-    final String location;
-  }
-  ```
-
-  final - 앱이 실행될 때(런타임)변하지 않는 상수가 되게 하려고 썻다.
 
 * static
 
@@ -1587,7 +1677,23 @@ https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
     * 부모위젯이 rebuild를 하여도 const를 붙여주면 Class로 분리한 위젯은 rebuild 안함
 
     * buildcontext를 갖고 있다.
-  
+
+## 안드로이드 키 생성
+
+```
+keytool -genkey -v -keystore ~/키파일명.jks -keyalg RSA -keysize 2048 -validity 10000 -alias 키별칭
+```
+
+나는 사용자 루트 디렉토리 ~/ 에 키를 생성했다. 키 파일명은 test-keystore.jks. 별칭은 test로 했다.
+
+### 키 확인 방법
+
+```
+keytool -list -v -keystore ~/test-keystore.jks -alias test
+```
+
+위 명령어를 통해 키 확인이 가능하다.
+
 ## Error
 
 VScode와 FVM을 사용하던 도중 Terminal에서 'fvm flutter run'을 사용하면 앱이 켜지지만, VScode의 'Start Debugging'버튼을 누르면 fvm으로 설정한 version이 아니라 다른 flutter version으로 실행됐다.
@@ -1709,3 +1815,21 @@ Container를 Align으로 감싸면 된다.
 
 https://stackoverflow.com/questions/54225462/flutter-why-is-container-width-not-honoured?rq=3
 
+---
+
+안드로이드 빌드 중 아래와 같은 에러가 났다.
+
+```
+A failure occurred while executing com.android.build.gradle.internal.tasks.CheckAarMetadataWorkAction
+```
+
+**해결**
+
+android 폴더 경로에서
+
+```
+./gradlew clean
+./gradlew build
+```
+
+---

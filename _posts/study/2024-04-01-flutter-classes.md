@@ -33,7 +33,7 @@ tags: flutter
   
     https://honor-driven.dev/flutter%EB%A1%9C-shopping-%EC%95%B1-%EB%A7%8C%EB%93%A4%EA%B8%B0-3-nestedscrollview-cec18854f859
 
-    body: TabBarView()를 TabBarDelegate(SliverPersistentHeader)로 겹쳐지는 위젯으로 만든 뒤 안보이는 SizedBox를 겹쳐놔 TabBarView()goryBreadcrumbs(SliverPersistentHeader)도 상단에 고정되게 했다.
+    body: TabBarView()를 TabBarDelegate(SliverPersistentHeader)로 겹쳐지는 위젯으로 만든 뒤 안보이는 SizedBox를 겹쳐놔 TabBarView()의 CategoryBreadcrumbs(SliverPersistentHeader)도 상단에 고정되게 했다.
   
   * 나만의 다양한 시도 기록..
 
@@ -188,7 +188,9 @@ tags: flutter
                 handle: appBar,
                 sliver: // 슬리버 앱바. 앱바도 투명배경이라 겹쳐야 해서 SliverOverlapAbsorber로 겹치기만 했다.
               ),
-              // 슬리버들...
+
+              // 앱바와 다른 고정되어야 할 위젯 사이의 슬리버들...
+
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: MultiSliver(
@@ -473,6 +475,18 @@ tags: flutter
 
   https://stackoverflow.com/questions/52414629/how-to-update-state-of-a-modalbottomsheet-in-flutter
 
+  **문제**
+
+  바텀시트에 expansionTileController가 있었고, 바텀시트가 닫히는 애니메이션 도중 빠르게 바텀시트 내에 있는 버튼을 터치했더니 에러가 났다.
+
+  ```
+  'package:flutter/src/material/expansion_tile.dart': Failed assertion: line 595 pos 12: 'widget.controller?._state == null': is not true.
+  ```
+
+  **해결???**
+
+  도저히 방법을 모르겠어서 닫히는 애니메이션을 없앴다.
+
 ### Wrap
 
   runSpacing - 교차 축 간격
@@ -544,7 +558,7 @@ tags: flutter
 
 ### Stack
 
-  이미지 위에 Stack, Positioned를 이용해 Container를 겹치고 이미지의 width와 Container의 width를 동일하게 하고 싶어서 width: double.infinity를 했으나 에러가 났다. 신기하게 bottom: 0 만 해서는 안되고 left, right도 0으로 해줘야 에러가 안났다.
+이미지 위에 Stack, Positioned를 이용해 Container를 겹치고 이미지의 width와 Container의 width를 동일하게 하고 싶어서 width: double.infinity를 했으나 에러가 났다. 신기하게 bottom: 0 만 해서는 안되고 left, right도 0으로 해줘야 에러가 안났다.
 
   ```dart
   Positioned(
@@ -564,6 +578,83 @@ tags: flutter
   ),
   ```
 
-  파트너가 곤충업체 업체마다 갖고있는 카테고리가 다르다.
+### Opacity
 
-  이미지가 커져야 한다.
+투명도 조정 위젯
+
+### FutureBuilder\<T>
+
+FutureBuilder의 future속성에 Future\<void> 타입을 넣고 싶었다.
+
+```dart
+FutureBuilder(
+  future: 퓨쳐,
+  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+    if (snapshot.hasData) {
+
+```
+void타입이라면 Future를 완료해도 항상 snapshot.data는 null이다. 따라서 snapshot.hasData는 사용하지 말자..
+
+난 GetX를 사용하여 다음과 같이 공통화 위젯을 만들어 봤다.
+
+```dart
+final futureData = Rxn<Future<void>>();
+
+Widget loadingWidget(Future Function() futureFunction, Widget widget) {
+  return Obx(
+    () => FutureBuilder(
+      future: futureData.value,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return Center(child: defaultLoadingWidget);
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    errorImg,
+                    verticalSpace(16),
+                    const Text('일시적으로 페이지를 찾을 수 없습니다.'),
+                    verticalSpace(7),
+                    const Text('잠시 후 다시 시도해주세요.'),
+                    verticalSpace(16),
+                    TextButton(
+                      child: const Text('새로고침'),
+                      onPressed: () {
+                        futureData.value = futureFunction();
+                      },
+                    ),
+                    verticalSpace(120),
+                  ],
+                ),
+              );
+            } else {
+              return widget;
+            }
+          default:
+            return Center(child: defaultLoadingWidget);
+        }
+      },
+    ),
+  );
+}
+```
+
+### PopScope
+
+```dart
+canPop: false,
+onPopInvoked: (didPop) {
+  if (didPop) {
+    return;
+  }
+
+  exitApp();
+},
+```
+
+onPopInvoked에 didPop은 canPop에 관계없이 Navigator.pop 같은 뒤로가기를 실행하면 true가 된다.
+즉, if (didPop) return;을 사용해야 한다.
