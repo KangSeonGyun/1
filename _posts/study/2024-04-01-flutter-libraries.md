@@ -31,10 +31,143 @@ Future<void> signOut() async {
 
 ### provider: ^6.1.2 (9690)
 
-* 화면 일부분만 reBuild하려고 써봤다. StatefulBuilder 혹은 Stateful과 GlobalKey로 하는 방법도 있는 듯 하다. https://vintageappmaker.tistory.com/510
-
 * Provider.of<T>(context) 는 watch와 유사하게 동작
 * Provider.of<T>(context, listen: false) 는 read와 유사하게 동작
+
+* Consumer 위젯
+  * 화면 일부분만 reBuild하려고 써봤다. StatefulBuilder 혹은 Stateful과 GlobalKey로 하는 방법도 있는 듯 하다. https://vintageappmaker.tistory.com/510
+
+### Riverpod
+
+#### 기본 세팅
+
+의존성 추가
+
+```
+flutter pub add flutter_riverpod
+flutter pub add riverpod_annotation
+flutter pub add dev:riverpod_generator
+flutter pub add dev:build_runner
+flutter pub add dev:custom_lint
+flutter pub add dev:riverpod_lint
+```
+
+lint 활성화
+
+
+```yaml
+# analysis_options.yam에 아래 내용 추가
+analyzer:
+  plugins:
+    - custom_lint
+```
+
+터미널에서 아래 명령어 실행
+
+```
+dart run custom_lint
+```
+
+#### 기본 개념(Concepts)
+
+어노테이션을 통한 Provider 자동생성 및 코드 자동생성을 사용하지 않고 Riverpod을 사용하는 방법을 알려주는 페이지
+
+https://riverpod.dev/ko/docs/concepts/about_code_generation
+
+#### Concepts (old) - Providers
+
+```dart
+// 기본적인 Provider 생성 방법
+final myProvider = Provider((ref) {
+  return 'value';
+});
+```
+
+프로바이더를 글로벌하게 전역변수로 선언하여 사용하는것을 두려워하지 말자.
+
+```dart
+// Provider Modifiers
+final myAutoDisposeProvider = StateProvider.autoDispose<int>((ref) => 0);
+final myFamilyProvider = Provider.family<String, int>((ref, id) => '$id');
+
+// 수식자 여러개 동시에 사용
+final userProvider = FutureProvider.autoDispose.family<User, int>((ref, userId) async {
+  return fetchUser(userId);
+});
+```
+
+.autoDispose 는 더 이상 상태를 구독하지 않을때 자동으로 프로바이터를 소멸되도록 합니다.   
+.family 외부 파라미터로부터 프로바이더를 생성할 때 사용합니다.
+
+#### Concepts (old) - Reading a Provider
+
+https://riverpod.dev/ko/docs/concepts/reading
+
+* ref.watch VS ref.listen
+
+  ref.watch는 프로바이더 상태값이 변경이되면 widget/provider을 다시 빌드하지만 ref.listen은 함수를 호출
+
+  ref.listen 메소드는 2개의 위치인자(positional arguments)가 필요합니다. 첫번째는 프로바이더이고 두번쨰는 콜백함수 입니다. 콜백함수는 상태변화에 대응하여 수행할 함수 입니다. 콜백함수로 2개의 값이 전달됩니다. 하나는 이전 상태 값이고 나머지 하는 갱신된 상태 값입니다.
+
+* 무엇을 읽을지 정하기
+
+  ```dart
+  // 예를들어 StreamProvider가 있을때
+  final userProvider = StreamProvider<User>(...);
+
+  // userProvider자체를 구독하는 것으로 동기된(synchronously) 현재 상태 값을 읽기
+  AsyncValue<User> user = ref.watch(userProvider);
+
+  // userProvider.stream을 사용하여 연결된 Stream을 얻기
+  Stream<User> user = ref.watch(userProvider.stream);
+
+  // userProvider.future를 사용해 가장 최근 상태값을 가진 Future를 얻기
+  Future<User> user = ref.watch(userProvider.future);
+  ```
+
+* select
+
+  ```dart
+  abstract class User {
+    String get name;
+    int get age;
+  }
+
+  // User의 name, age 속성이 변경되면 위젯이 재빌드
+  Widget build(BuildContext context, WidgetRef ref) {
+    User user = ref.watch(userProvider);
+    return Text(user.name);
+  }
+
+  // User의 name 속성이 변경되면 위젯이 재빌드
+  Widget build(BuildContext context, WidgetRef ref) {
+    String name = ref.watch(userProvider.select((user) => user.name));
+    return Text(name);
+  }
+
+  // ref.listen과 select도 함께 사용 가능
+  ref.listen<String>(
+    userProvider.select((user) => user.name),
+    (String? previousName, String newName) {
+      print('The user name changed $newName');
+    }
+  );
+
+  // select로 반환하는 값이 반드시 객체일 필요는 없다.
+  // == 연산자의 오버라이드(overrides)로 객체가 동일하다고 정의된다면 반환 값으로 무엇이 오든 상관없다.
+  final label = ref.watch(userProvider.select((user) => 'Mr ${user.name}'));
+  ```
+
+* etc
+
+  ref.watch(); 와 ref.listen(); 에서는 비동기 함수를 호출하지 말자.   
+  예를들어 Button의 onPressed 혹은 initState와 다른 생명주기 안에서 watch메소드를 호출하면 안된다. 이땐 ref.read를 사용하자.
+
+  ref.read();를 Build()안에서 사용하지 말자.   
+  프로바이더의 상태값이 변경되지 않고, reBuild를 줄이고 싶어서 ref.read()를 사용하면 좋겠다고 생각하지만, ref.watch()를 사용해도 정확히 동일한 효과가 나온다.   
+  또한 대부분의 상황해서 ref.watch() 사용이 좋다고 한다.
+
+
 
 ### stacked: ^3.4.0 (1388)
 
