@@ -658,3 +658,18 @@ onPopInvoked: (didPop) {
 
 onPopInvoked에 didPop은 canPop에 관계없이 Navigator.pop 같은 뒤로가기를 실행하면 true가 된다.
 즉, if (didPop) return;을 사용해야 한다.
+
+
+### Draggable
+
+드래그 가능한 위젯을 만들 수 있다.
+
+### DragTarget
+
+Draggable 위젯을 드랍할 수 있는 공간
+
+* onAcceptWithDetails: Draggable위젯이 놓여졌을 때 실행된다.
+
+* onWillAcceptWithDetails속성은 bool을 반환하며, Draggable위젯을 놓을 수 있는지 여부를 결정할 수 있다. 이 속성을 false로 두면 onAcceptWithDetails 콜백이 실행안된다.
+
+* builder: (context, candidateData, rejectedData)속성은 Draggable위젯을 놓을 수 있다면 candidateData에 값이 전달되고 아니라면 rejectedData에 전달된다.
